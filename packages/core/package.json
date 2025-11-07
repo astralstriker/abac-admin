@@ -1,0 +1,87 @@
+{
+  "name": "@abac-admin/core",
+  "version": "1.0.0",
+  "description": "Lightweight, framework-agnostic core for ABAC Policy Administration",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./api": {
+      "types": "./dist/api/index.d.ts",
+      "import": "./dist/api/index.js"
+    },
+    "./schemas": {
+      "types": "./dist/schemas/index.d.ts",
+      "import": "./dist/schemas/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean --minify",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "size": "size-limit",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "zod": "^3.0.0"
+  },
+  "dependencies": {
+    "abac-engine": "^1.1.0"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.0.0",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "size-limit": "^11.0.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0",
+    "zod": "^3.22.4"
+  },
+  "size-limit": [
+    {
+      "path": "dist/index.js",
+      "limit": "15 KB"
+    }
+  ],
+  "keywords": [
+    "abac",
+    "authorization",
+    "policy",
+    "access-control",
+    "admin",
+    "lightweight",
+    "framework-agnostic"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/astralstriker/abac-admin.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/astralstriker/abac-admin/issues"
+  },
+  "homepage": "https://github.com/astralstriker/abac-admin#readme",
+  "license": "MIT",
+  "author": "astralstriker"
+}

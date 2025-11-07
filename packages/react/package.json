@@ -1,0 +1,87 @@
+{
+  "name": "@abac-admin/react",
+  "version": "1.0.0",
+  "description": "Headless React hooks for ABAC Policy Administration - bring your own UI",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./factories": {
+      "import": "./dist/factories/index.js",
+      "types": "./dist/factories/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --external react --minify",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch --external react",
+    "test": "vitest",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/react-query": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@abac-admin/core": "*"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.0.0",
+    "@tanstack/react-query": "^5.17.0",
+    "@types/react": "^18.2.48",
+    "@testing-library/react": "^14.1.2",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "react": "^18.2.0",
+    "size-limit": "^11.0.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0"
+  },
+  "size-limit": [
+    {
+      "path": "dist/index.js",
+      "limit": "30 KB"
+    }
+  ],
+  "keywords": [
+    "abac",
+    "react",
+    "hooks",
+    "headless",
+    "unstyled",
+    "authorization",
+    "policy",
+    "access-control"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/astralstriker/abac-admin.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/astralstriker/abac-admin/issues"
+  },
+  "homepage": "https://github.com/astralstriker/abac-admin#readme",
+  "license": "MIT",
+  "author": "astralstriker"
+}

@@ -1,0 +1,48 @@
+# Development documentation
+docs/dev/
+*.md
+!README.md
+!CONTRIBUTING.md
+!LICENSE.md
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.husky/
+commitlint.config.js
+
+# Development tools
+.vscode/
+.idea/
+*.sublime-*
+
+# Testing
+coverage/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__/
+__mocks__/
+vitest.config.ts
+jest.config.js
+
+# Examples (users don't need examples in npm)
+examples/
+
+# Build configs
+turbo.json
+tsconfig.json
+tsconfig.*.json
+.changeset/
+
+# Misc development files
+.DS_Store
+*.log
+*.tmp
+.env*
+!.env.example
