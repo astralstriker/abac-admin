@@ -1,0 +1,84 @@
+{
+  "name": "@abac-admin/nextjs",
+  "version": "1.0.0",
+  "description": "Next.js utilities for ABAC Policy Administration",
+  "keywords": [
+    "abac",
+    "authorization",
+    "access-control",
+    "policy",
+    "nextjs",
+    "react",
+    "typescript"
+  ],
+  "homepage": "https://github.com/yourusername/abac-admin#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/abac-admin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/abac-admin.git",
+    "directory": "packages/nextjs"
+  },
+  "license": "MIT",
+  "author": "Your Name <astralstriker@users.noreply.github.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./server": {
+      "import": {
+        "types": "./dist/server/index.d.ts",
+        "default": "./dist/server/index.js"
+      },
+      "require": {
+        "types": "./dist/server/index.d.cts",
+        "default": "./dist/server/index.cjs"
+      }
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts src/server/index.ts --format esm,cjs --dts --external react,next,zod --minify",
+    "dev": "tsup src/index.ts src/server/index.ts --format esm,cjs --dts --external react,next,zod --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@abac-admin/core": "file:../core",
+    "@abac-admin/react": "file:../react"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.48",
+    "next": "^14.1.0",
+    "react": "^18.2.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "zod": "^3.22.4"
+  },
+  "peerDependencies": {
+    "next": ">=13.0.0",
+    "react": ">=18.0.0",
+    "zod": "^3.22.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

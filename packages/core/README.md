@@ -454,12 +454,12 @@ Contributions are welcome! Please read our [Contributing Guide](../../CONTRIBUTI
 
 ## License
 
-MIT © [Your Name]
+MIT © [astralstriker]
 
 ## Support
 
 - [Documentation](https://abac-admin.dev)
-- [GitHub Issues](https://github.com/yourusername/abac-admin/issues)
+- [GitHub Issues](https://github.com/astralstriker/abac-admin/issues)
 - [Discord Community](https://discord.gg/abac-admin)
 
 ---

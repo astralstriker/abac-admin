@@ -517,7 +517,7 @@ npm install zod react @types/react
 ## Support
 
 - **Documentation**: https://abac-admin.dev
-- **GitHub Issues**: https://github.com/yourusername/abac-admin/issues
+- **GitHub Issues**: https://github.com/astralstriker/abac-admin/issues
 - **Discord**: https://discord.gg/abac-admin
 
 ---

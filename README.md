@@ -255,7 +255,7 @@ Works seamlessly with:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/abac-admin.git
+git clone https://github.com/astralstriker/abac-admin.git
 cd abac-admin
 
 # Install dependencies

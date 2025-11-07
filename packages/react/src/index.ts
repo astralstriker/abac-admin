@@ -2,7 +2,31 @@
 export { ABACProvider, useABACClient } from "./context/ABACContext";
 
 // Hooks
-export { usePolicies } from "./hooks/usePolicies";
+export {
+  useAttribute,
+  useAttributeComparison,
+  useAttributeHistory,
+  // Attribute hooks
+  useAttributes,
+  // Audit hooks
+  useAuditLog,
+  useAuditStatistics,
+  useEntityHistory,
+  // Policy hooks
+  usePolicies,
+  usePolicy,
+  usePolicyTest,
+  usePolicyVersions,
+  useRecentActivity,
+  useUserActivity,
+} from "./hooks";
+
+// Hook result types
+export type {
+  UseAttributesResult,
+  UseAuditLogResult,
+  UsePoliciesResult,
+} from "./hooks";
 
 // Re-export types from core
 export type {
