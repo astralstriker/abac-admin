@@ -24,7 +24,7 @@ export function TableOfContents() {
       const headings = article.querySelectorAll("h2, h3");
       const tocItems: TocItem[] = [];
 
-      headings.forEach((heading, index) => {
+      headings.forEach((heading) => {
         const level = parseInt(heading.tagName.substring(1));
         const text = heading.textContent || "";
 
@@ -42,43 +42,8 @@ export function TableOfContents() {
       });
 
       setToc(tocItems);
-
-      // Function to find the current active heading
-      const updateActiveHeading = () => {
-        const scrollY = window.scrollY;
-        const headingElements = Array.from(headings) as HTMLElement[];
-
-        // Find all headings that are above the current scroll position
-        const visibleHeadings = headingElements
-          .map((heading) => ({
-            id: heading.id,
-            top: heading.getBoundingClientRect().top + scrollY,
-          }))
-          .filter((heading) => heading.top <= scrollY + 100); // 100px offset for better UX
-
-        // Set the active heading to the last one above the scroll position
-        if (visibleHeadings.length > 0) {
-          const current = visibleHeadings[visibleHeadings.length - 1];
-          setActiveId(current.id);
-        } else if (headingElements.length > 0) {
-          // If no heading is above scroll position, highlight the first one
-          setActiveId(headingElements[0].id);
-        }
-      };
-
-      // Initial update
-      updateActiveHeading();
-
-      // Update on scroll
-      const handleScroll = () => {
-        updateActiveHeading();
-      };
-
-      window.addEventListener("scroll", handleScroll, { passive: true });
-
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
+      // Reset active ID on page change
+      setActiveId("");
     }, 100);
 
     return () => clearTimeout(timeout);
@@ -88,7 +53,7 @@ export function TableOfContents() {
     e.preventDefault();
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80;
+      const offset = 100;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -97,7 +62,8 @@ export function TableOfContents() {
         behavior: "smooth",
       });
 
-      // Update URL without triggering navigation
+      // Update active ID and URL
+      setActiveId(id);
       window.history.pushState(null, "", `#${id}`);
     }
   };
