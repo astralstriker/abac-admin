@@ -1,0 +1,48 @@
+'use client'
+
+import { ABACProvider, PolicyViewer } from '@devcraft-ts/abac-admin-react-ui'
+import '@devcraft-ts/abac-admin-react-ui/styles.css'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
+export default function ViewPolicyPage({ params }: { params: { id: string } }) {
+  const router = useRouter()
+  const [baseURL, setBaseURL] = useState('')
+
+  useEffect(() => {
+    setBaseURL(`${window.location.origin}/api/abac`)
+  }, [])
+
+  if (!baseURL) {
+    return (
+      <div className="min-h-screen p-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <ABACProvider config={{ baseURL }}>
+      <div className="min-h-screen p-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-6">
+            <button
+              onClick={() => router.push('/policies')}
+              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 flex items-center gap-2 transition-colors"
+            >
+              ← Back to Policies
+            </button>
+          </div>
+          <PolicyViewer
+            policyId={params.id}
+            onEdit={() => router.push(`/policies/edit/${params.id}`)}
+            onClose={() => router.push('/policies')}
+          />
+        </div>
+      </div>
+    </ABACProvider>
+  )
+}

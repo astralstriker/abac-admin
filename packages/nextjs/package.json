@@ -11,17 +11,17 @@
     "react",
     "typescript"
   ],
-  "homepage": "https://github.com/yourusername/abac-admin#readme",
+  "homepage": "https://github.com/astralstriker/abac-admin#readme",
   "bugs": {
-    "url": "https://github.com/yourusername/abac-admin/issues"
+    "url": "https://github.com/astralstriker/abac-admin/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/abac-admin.git",
+    "url": "git+https://github.com/astralstriker/abac-admin.git",
     "directory": "packages/nextjs"
   },
   "license": "MIT",
-  "author": "Your Name <astralstriker@users.noreply.github.com>",
+  "author": "astralstriker",
   "type": "module",
   "exports": {
     ".": {
