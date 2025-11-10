@@ -1,5 +1,5 @@
 {
-  "name": "@astralstriker/abac-admin-core",
+  "name": "@devcraft-ts/abac-admin-core",
   "version": "1.0.0",
   "description": "Lightweight, framework-agnostic core for ABAC Policy Administration",
   "type": "module",

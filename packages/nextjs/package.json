@@ -1,5 +1,5 @@
 {
-  "name": "@astralstriker/abac-admin-nextjs",
+  "name": "@devcraft-ts/abac-admin-nextjs",
   "version": "1.0.0",
   "description": "Next.js utilities for ABAC Policy Administration",
   "keywords": [
@@ -58,8 +58,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@astralstriker/abac-admin-core": "^1.0.0",
-    "@astralstriker/abac-admin-react": "^1.0.0"
+    "@devcraft-ts/abac-admin-core": "^1.0.0",
+    "@devcraft-ts/abac-admin-react": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
