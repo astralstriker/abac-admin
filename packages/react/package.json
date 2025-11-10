@@ -1,5 +1,5 @@
 {
-  "name": "@abac-admin/react",
+  "name": "@astralstriker/abac-admin-react",
   "version": "1.0.0",
   "description": "Headless React hooks for ABAC Policy Administration - bring your own UI",
   "type": "module",
@@ -40,7 +40,7 @@
     }
   },
   "dependencies": {
-    "@abac-admin/core": "*"
+    "@astralstriker/abac-admin-core": "^1.0.0"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^11.0.0",
@@ -84,5 +84,8 @@
   },
   "homepage": "https://github.com/astralstriker/abac-admin#readme",
   "license": "MIT",
-  "author": "astralstriker"
+  "author": "astralstriker",
+  "publishConfig": {
+    "access": "public"
+  }
 }

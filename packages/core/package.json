@@ -1,5 +1,5 @@
 {
-  "name": "@abac-admin/core",
+  "name": "@astralstriker/abac-admin-core",
   "version": "1.0.0",
   "description": "Lightweight, framework-agnostic core for ABAC Policy Administration",
   "type": "module",
@@ -77,5 +77,8 @@
   },
   "homepage": "https://github.com/astralstriker/abac-admin#readme",
   "license": "MIT",
-  "author": "astralstriker"
+  "author": "astralstriker",
+  "publishConfig": {
+    "access": "public"
+  }
 }
