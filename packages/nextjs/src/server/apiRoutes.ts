@@ -8,7 +8,7 @@ import {
   type PolicyInput,
   type PolicyUpdate,
   type ResourceType,
-} from "@abac-admin/core";
+} from "@devcraft-ts/abac-admin-core";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -93,7 +93,7 @@ export interface PolicyRouteHandlers {
  * ```ts
  * // app/api/abac/policies/route.ts
  * import { createPolicyRoutes } from '@abac-admin/nextjs/server';
- * import { ABACAdminClient } from '@abac-admin/core';
+ * import { ABACAdminClient } from '@devcraft-ts/abac-admin-core';
  *
  * const getClient = () => new ABACAdminClient({
  *   baseURL: process.env.ABAC_API_URL!,

@@ -1,4 +1,4 @@
-import { ABACAdminClient, type ABACAdminConfig } from '@abac-admin/core';
+import { ABACAdminClient, type ABACAdminConfig } from '@devcraft-ts/abac-admin-core';
 import React, { createContext, useContext, useMemo } from 'react';
 
 export interface ABACProviderProps {

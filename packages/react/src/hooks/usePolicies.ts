@@ -1,4 +1,4 @@
-import { PolicyService, type Policy, type PolicyFilters, type PolicyInput, type PolicyUpdate } from '@abac-admin/core';
+import { PolicyService, type Policy, type PolicyFilters, type PolicyInput, type PolicyUpdate } from '@devcraft-ts/abac-admin-core';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useABACClient } from '../context/ABACContext';
 

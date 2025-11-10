@@ -1,4 +1,4 @@
-// Re-export all React hooks and components from @abac-admin/react
+// Re-export all React hooks and components from @devcraft-ts/abac-admin-react
 export {
     ABACProvider,
     useABACClient,
@@ -15,14 +15,14 @@ export {
     usePolicyVersions,
     useRecentActivity,
     useUserActivity
-} from "@abac-admin/react";
+} from "@devcraft-ts/abac-admin-react";
 
 // Re-export types from React package
 export type {
     UseAttributesResult,
     UseAuditLogResult,
     UsePoliciesResult
-} from "@abac-admin/react";
+} from "@devcraft-ts/abac-admin-react";
 
 // Re-export core types for convenience
 export type {
@@ -35,7 +35,7 @@ export type {
     PolicyInput,
     PolicyUpdate,
     ResourceType
-} from "@abac-admin/core";
+} from "@devcraft-ts/abac-admin-core";
 
 // Note: Server utilities are exported from '@abac-admin/nextjs/server'
 // import { createPolicyRoutes } from '@abac-admin/nextjs/server'

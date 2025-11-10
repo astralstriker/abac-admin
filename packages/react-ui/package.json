@@ -1,0 +1,96 @@
+{
+  "name": "@devcraft-ts/abac-admin-react-ui",
+  "version": "1.0.0",
+  "description": "Pre-built UI components for ABAC Policy Administration - batteries included",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --external react,react-dom --minify && npm run build:css",
+    "build:css": "tailwindcss -i ./src/styles/globals.css -o ./dist/styles.css --minify",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch --external react,react-dom",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@devcraft-ts/abac-admin-core": "^1.0.0",
+    "@devcraft-ts/abac-admin-react": "^1.0.0",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-switch": "^1.0.3",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-toast": "^1.1.5",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.300.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.4.33",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.4.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "abac",
+    "react",
+    "ui",
+    "components",
+    "radix-ui",
+    "authorization",
+    "policy",
+    "access-control",
+    "admin",
+    "dashboard"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/astralstriker/abac-admin.git",
+    "directory": "packages/react-ui"
+  },
+  "bugs": {
+    "url": "https://github.com/astralstriker/abac-admin/issues"
+  },
+  "homepage": "https://github.com/astralstriker/abac-admin#readme",
+  "license": "MIT",
+  "author": "astralstriker",
+  "publishConfig": {
+    "access": "public"
+  }
+}

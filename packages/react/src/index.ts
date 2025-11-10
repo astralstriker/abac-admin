@@ -36,12 +36,12 @@ export type {
   PolicyEffect,
   PolicyInput,
   PolicyUpdate,
-} from "@abac-admin/core";
+} from "@devcraft-ts/abac-admin-core";
 
 export type {
   AttributeValue,
   AttributeValueType,
   ResourceType,
-} from "@abac-admin/core";
+} from "@devcraft-ts/abac-admin-core";
 
-export type { AuditAction, AuditLogEntry } from "@abac-admin/core";
+export type { AuditAction, AuditLogEntry } from "@devcraft-ts/abac-admin-core";
