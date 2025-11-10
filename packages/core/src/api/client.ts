@@ -12,13 +12,13 @@ export class ABACAdminClient {
   constructor(config: ABACAdminConfig) {
     this.config = {
       timeout: 30000,
-      ...config
+      ...config,
     };
   }
 
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<T> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
@@ -28,17 +28,17 @@ export class ABACAdminClient {
         ...options,
         signal: controller.signal,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           ...this.config.headers,
-          ...options.headers
-        }
+          ...options.headers,
+        },
       });
 
       clearTimeout(timeoutId);
 
       if (!response.ok) {
         const error = new Error(
-          `API Error: ${response.status} ${response.statusText}`
+          `API Error: ${response.status} ${response.statusText}`,
         );
         this.config.onError?.(error);
         throw error;
@@ -54,37 +54,39 @@ export class ABACAdminClient {
   }
 
   async get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
-    const url = new URL(endpoint, this.config.baseURL);
-    if (params) {
+    let url = endpoint;
+    if (params && Object.keys(params).length > 0) {
+      const searchParams = new URLSearchParams();
       Object.entries(params).forEach(([key, value]) => {
-        url.searchParams.append(key, value);
+        searchParams.append(key, value);
       });
+      url = `${endpoint}?${searchParams.toString()}`;
     }
-    return this.request<T>(url.pathname + url.search, { method: 'GET' });
+    return this.request<T>(url, { method: "GET" });
   }
 
   async post<T>(endpoint: string, data: unknown): Promise<T> {
     return this.request<T>(endpoint, {
-      method: 'POST',
-      body: JSON.stringify(data)
+      method: "POST",
+      body: JSON.stringify(data),
     });
   }
 
   async put<T>(endpoint: string, data: unknown): Promise<T> {
     return this.request<T>(endpoint, {
-      method: 'PUT',
-      body: JSON.stringify(data)
+      method: "PUT",
+      body: JSON.stringify(data),
     });
   }
 
   async patch<T>(endpoint: string, data: unknown): Promise<T> {
     return this.request<T>(endpoint, {
-      method: 'PATCH',
-      body: JSON.stringify(data)
+      method: "PATCH",
+      body: JSON.stringify(data),
     });
   }
 
   async delete<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: 'DELETE' });
+    return this.request<T>(endpoint, { method: "DELETE" });
   }
 }

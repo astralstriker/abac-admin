@@ -43,20 +43,22 @@ export default function HomePage() {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                href="/policies"
-                className="group inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/50 dark:shadow-blue-500/30 transition-all duration-200 hover:shadow-xl hover:scale-105"
-              >
-                <span>Try Live Demo</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
-                href="/docs"
-                className="inline-flex items-center space-x-2 px-8 py-4 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-semibold hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 hover:shadow-lg"
-              >
-                <span>Documentation</span>
-              </Link>
+            <div className="flex flex-col items-center justify-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <Link
+                  href="/policies"
+                  className="group inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/50 dark:shadow-blue-500/30 transition-all duration-200 hover:shadow-xl hover:scale-105"
+                >
+                  <span>Try Live Demo</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link
+                  href="/docs"
+                  className="inline-flex items-center space-x-2 px-8 py-4 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-semibold hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 hover:shadow-lg"
+                >
+                  <span>Documentation</span>
+                </Link>
+              </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 <a
                   href="https://github.com/astralstriker/abac-engine"
@@ -131,12 +133,18 @@ export default function HomePage() {
                 <Zap className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Visual Policy Builder
+                Policy Management
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Build complex policies with an intuitive drag-and-drop
-                interface. No JSON required.
+                Create, edit, and manage ABAC policies with a powerful visual
+                interface.
               </p>
+              <Link
+                href="/policies"
+                className="inline-flex items-center text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+              >
+                View Policies <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
               <ul className="space-y-2">
                 <li className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                   <CheckCircle2 className="w-4 h-4 text-green-500" />
@@ -145,6 +153,14 @@ export default function HomePage() {
                 <li className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                   <CheckCircle2 className="w-4 h-4 text-green-500" />
                   <span>Comparison operators</span>
+                </li>
+                <li className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                  <CheckCircle2 className="w-4 h-4 text-green-500" />
+                  <span>Real-time policy editor</span>
+                </li>
+                <li className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                  <CheckCircle2 className="w-4 h-4 text-green-500" />
+                  <span>Policy versioning</span>
                 </li>
                 <li className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
                   <CheckCircle2 className="w-4 h-4 text-green-500" />

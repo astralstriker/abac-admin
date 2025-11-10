@@ -1,6 +1,6 @@
 {
   "name": "@devcraft-ts/abac-admin-core",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Lightweight, framework-agnostic core for ABAC Policy Administration",
   "type": "module",
   "main": "./dist/index.js",
@@ -69,7 +69,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/astralstriker/abac-admin.git",
+    "url": "git+https://github.com/astralstriker/abac-admin.git",
     "directory": "packages/core"
   },
   "bugs": {

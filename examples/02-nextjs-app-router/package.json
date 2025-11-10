@@ -11,10 +11,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@devcraft-ts/abac-admin-core": "^1.0.2",
-    "@devcraft-ts/abac-admin-nextjs": "^1.0.2",
-    "@devcraft-ts/abac-admin-react": "^1.0.2",
-    "@devcraft-ts/abac-admin-react-ui": "^1.0.2",
+    "@devcraft-ts/abac-admin-core": "^1.0.3",
+    "@devcraft-ts/abac-admin-nextjs": "^1.0.3",
+    "@devcraft-ts/abac-admin-react": "^1.0.3",
+    "@devcraft-ts/abac-admin-react-ui": "^1.1.1",
     "abac-engine": "^1.1.0",
     "lucide-react": "^0.533.0",
     "next": "^14.2.0",

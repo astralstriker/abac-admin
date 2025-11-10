@@ -17,7 +17,7 @@ import { TableOfContents } from "../../components/TableOfContents";
 
 const ThemeToggle = dynamic(
   () =>
-    import("../../components/ThemeToggle").then((mod) => ({
+    import("@devcraft-ts/abac-admin-react-ui").then((mod) => ({
       default: mod.ThemeToggle,
     })),
   {

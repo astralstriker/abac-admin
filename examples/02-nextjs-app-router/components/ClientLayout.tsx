@@ -1,27 +1,16 @@
 "use client";
 
-import { BookOpen, Home, Shield } from "lucide-react";
-import dynamic from "next/dynamic";
+import { ThemeProvider, ThemeToggle } from "@devcraft-ts/abac-admin-react-ui";
+import { BookOpen, Clock, Home, Shield, Tag } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ThemeProvider } from "./ThemeProvider";
-
-const ThemeToggle = dynamic(
-  () => import("./ThemeToggle").then((mod) => ({ default: mod.ThemeToggle })),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 animate-pulse"></div>
-    ),
-  },
-);
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isDocsPage = pathname?.startsWith("/docs");
 
   return (
-    <ThemeProvider>
+    <ThemeProvider defaultTheme="system" storageKey="abac-admin-theme">
       <div className="min-h-screen bg-white dark:bg-[#0a0a0a]">
         {/* Navigation - Hidden on docs pages */}
         {!isDocsPage && (
@@ -68,6 +57,20 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
                   >
                     <Shield className="w-4 h-4" />
                     <span>Policies</span>
+                  </Link>
+                  <Link
+                    href="/attributes"
+                    className="inline-flex items-center space-x-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  >
+                    <Tag className="w-4 h-4" />
+                    <span>Attributes</span>
+                  </Link>
+                  <Link
+                    href="/audit"
+                    className="inline-flex items-center space-x-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  >
+                    <Clock className="w-4 h-4" />
+                    <span>Audit Log</span>
                   </Link>
                   <Link
                     href="/docs"

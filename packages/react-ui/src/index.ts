@@ -1,3 +1,10 @@
+// Theme Components
+export { ThemeProvider, useTheme } from "./components/theme/ThemeProvider";
+export type { Theme } from "./components/theme/ThemeProvider";
+
+export { ThemeToggle } from "./components/theme/ThemeToggle";
+export type { ThemeToggleProps } from "./components/theme/ThemeToggle";
+
 // UI Components
 export { Button } from "./components/ui/Button";
 export type { ButtonProps } from "./components/ui/Button";
@@ -46,6 +53,14 @@ export type {
   DialogProps,
   DialogTitleProps,
 } from "./components/ui/Dialog";
+
+// Attribute Components
+export { AttributeManager } from "./components/attributes/AttributeManager";
+export type { AttributeManagerProps } from "./components/attributes/AttributeManager";
+
+// Audit Components
+export { AuditLogViewer } from "./components/audit/AuditLogViewer";
+export type { AuditLogViewerProps } from "./components/audit/AuditLogViewer";
 
 // Policy Components
 export { PolicyList } from "./components/policies/PolicyList";

@@ -1,3 +1,4 @@
+import "@devcraft-ts/abac-admin-react-ui/styles.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClientLayout } from "../components/ClientLayout";
@@ -17,20 +18,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('theme') || 'dark';
-                  document.documentElement.classList.add(theme);
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
-      </head>
       <body className={`${inter.className} antialiased`}>
         <ClientLayout>{children}</ClientLayout>
       </body>
