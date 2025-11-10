@@ -1,0 +1,32 @@
+{
+  "name": "@abac-admin/examples-vanilla-nodejs",
+  "version": "1.0.0",
+  "description": "Vanilla Node.js examples for @abac-admin/core package",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "basic": "node basic-policies.js",
+    "advanced": "node advanced-conditions.js",
+    "attributes": "node attribute-management.js",
+    "audit": "node audit-queries.js",
+    "batch": "node batch-operations.js",
+    "workflow": "node complete-workflow.js",
+    "all": "npm run basic && npm run attributes && npm run advanced && npm run audit && npm run batch"
+  },
+  "keywords": [
+    "abac",
+    "authorization",
+    "access-control",
+    "examples",
+    "nodejs"
+  ],
+  "author": "astralstriker",
+  "license": "MIT",
+  "dependencies": {
+    "@abac-admin/core": "workspace:*",
+    "zod": "^3.22.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
