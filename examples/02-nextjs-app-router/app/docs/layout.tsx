@@ -13,6 +13,7 @@ import {
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { TableOfContents } from "../../components/TableOfContents";
 
 const ThemeToggle = dynamic(
   () =>
@@ -213,9 +214,7 @@ export default function DocsLayout({
               <h3 className="mb-3 text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">
                 On This Page
               </h3>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                {/* TOC will be populated dynamically by each page */}
-              </div>
+              <TableOfContents />
             </div>
           </aside>
         </div>
