@@ -1,14 +1,14 @@
-# @abac-admin/react
+# @devcraft-ts/abac-admin-react
 
 > Headless React hooks for ABAC Policy Administration
 
-[![npm version](https://img.shields.io/npm/v/@abac-admin/react.svg)](https://www.npmjs.com/package/@abac-admin/react)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@abac-admin/react)](https://bundlephobia.com/package/@abac-admin/react)
+[![npm version](https://img.shields.io/npm/v/@devcraft-ts/abac-admin-react.svg)](https://www.npmjs.com/package/@devcraft-ts/abac-admin-react)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@devcraft-ts/abac-admin-react)](https://bundlephobia.com/package/@devcraft-ts/abac-admin-react)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
 
-`@abac-admin/react` provides headless React hooks for managing ABAC (Attribute-Based Access Control) policies, attributes, and audit logs. Built on top of `@abac-admin/core`, these hooks give you full control over your UI while handling all the data fetching and state management logic.
+`@devcraft-ts/abac-admin-react` provides headless React hooks for managing ABAC (Attribute-Based Access Control) policies, attributes, and audit logs. Built on top of `@devcraft-ts/abac-admin-core`, these hooks give you full control over your UI while handling all the data fetching and state management logic.
 
 ## Features
 
@@ -23,15 +23,15 @@
 ## Installation
 
 ```bash
-npm install @abac-admin/react @abac-admin/core zod react
+npm install @devcraft-ts/abac-admin-react @devcraft-ts/abac-admin-core zod react
 ```
 
 ```bash
-yarn add @abac-admin/react @abac-admin/core zod react
+yarn add @devcraft-ts/abac-admin-react @devcraft-ts/abac-admin-core zod react
 ```
 
 ```bash
-pnpm add @abac-admin/react @abac-admin/core zod react
+pnpm add @devcraft-ts/abac-admin-react @devcraft-ts/abac-admin-core zod react
 ```
 
 ## Quick Start
@@ -39,7 +39,7 @@ pnpm add @abac-admin/react @abac-admin/core zod react
 ### 1. Wrap Your App with ABACProvider
 
 ```tsx
-import { ABACProvider } from '@abac-admin/react';
+import { ABACProvider } from '@devcraft-ts/abac-admin-react';
 
 function App() {
   return (
@@ -60,7 +60,7 @@ function App() {
 ### 2. Use Hooks in Your Components
 
 ```tsx
-import { usePolicies } from '@abac-admin/react';
+import { usePolicies } from '@devcraft-ts/abac-admin-react';
 
 function PolicyList() {
   const {
@@ -590,8 +590,8 @@ While not required, you can use these hooks alongside TanStack Query:
 
 ```tsx
 import { useQuery } from '@tanstack/react-query';
-import { useABACClient } from '@abac-admin/react';
-import { PolicyService } from '@abac-admin/core';
+import { useABACClient } from '@devcraft-ts/abac-admin-react';
+import { PolicyService } from '@devcraft-ts/abac-admin-core';
 
 function PolicyListWithQuery() {
   const client = useABACClient();
@@ -624,7 +624,7 @@ import type {
   PolicyUpdate,
   AttributeValue,
   AuditLogEntry
-} from '@abac-admin/react';
+} from '@devcraft-ts/abac-admin-react';
 ```
 
 ---
@@ -702,9 +702,9 @@ For complete working examples, see:
 
 ## Related Packages
 
-- **[@abac-admin/core](../core)** - Framework-agnostic core (required)
-- **[@abac-admin/nextjs](../nextjs)** - Next.js server utilities
-- **[@abac-admin/react-ui](../react-ui)** - Pre-built UI components (optional)
+- **[@devcraft-ts/abac-admin-core](../core)** - Framework-agnostic core (required)
+- **[@devcraft-ts/abac-admin-nextjs](../nextjs)** - Next.js server utilities
+- **[@devcraft-ts/abac-admin-react-ui](../react-ui)** - Pre-built UI components (optional)
 
 ---
 

@@ -5,7 +5,7 @@ Real-world examples demonstrating how to use the ABAC Admin packages in differen
 ## 📚 Available Examples
 
 ### [01 - Vanilla Node.js](./01-vanilla-nodejs)
-**Pure Node.js implementation using `@abac-admin/core`**
+**Pure Node.js implementation using `@devcraft-ts/abac-admin-core`**
 
 Learn the fundamentals without any framework overhead. Perfect for:
 - CLI tools and scripts
@@ -23,7 +23,7 @@ Learn the fundamentals without any framework overhead. Perfect for:
 - ✅ Complete end-to-end workflow
 
 ### [02 - Next.js App Router](./02-nextjs-app-router)
-**Modern Next.js 14+ with App Router using `@abac-admin/react` and `@abac-admin/nextjs`**
+**Modern Next.js 14+ with App Router using `@devcraft-ts/abac-admin-react` and `@devcraft-ts/abac-admin-nextjs`**
 
 Full-stack Next.js integration with:
 - Server Components and Server Actions
@@ -33,7 +33,7 @@ Full-stack Next.js integration with:
 - Type-safe policy management UI
 
 ### [03 - Express API](./03-express-api)
-**RESTful API server using Express and `@abac-admin/core`**
+**RESTful API server using Express and `@devcraft-ts/abac-admin-core`**
 
 Build a complete ABAC policy management API:
 - REST endpoints for policies, attributes, and audit
@@ -168,7 +168,7 @@ Create a `.env` file in each example directory (see `.env.example` files).
 ### Client Initialization
 
 ```javascript
-import { ABACAdminClient } from '@abac-admin/core';
+import { ABACAdminClient } from '@devcraft-ts/abac-admin-core';
 
 const client = new ABACAdminClient({
   baseURL: process.env.ABAC_API_URL,
@@ -181,7 +181,7 @@ const client = new ABACAdminClient({
 ### Building Conditions
 
 ```javascript
-import { ConditionBuilder } from '@abac-admin/core';
+import { ConditionBuilder } from '@devcraft-ts/abac-admin-core';
 
 const condition = ConditionBuilder.and(
   ConditionBuilder.equals(
@@ -198,7 +198,7 @@ const condition = ConditionBuilder.and(
 ### React Hook Usage
 
 ```tsx
-import { usePolicies } from '@abac-admin/react';
+import { usePolicies } from '@devcraft-ts/abac-admin-react';
 
 function PolicyList() {
   const { policies, createPolicy, isLoading } = usePolicies();
@@ -284,7 +284,7 @@ examples/
 **Q: "fetch is not defined"**
 A: Ensure you're using Node.js 18+ which includes native fetch support.
 
-**Q: "Cannot find module '@abac-admin/core'"**
+**Q: "Cannot find module '@devcraft-ts/abac-admin-core'"**
 A: Run `npm install` in the example directory.
 
 **Q: "API connection refused"**

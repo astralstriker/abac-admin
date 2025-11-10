@@ -1,6 +1,6 @@
 # Next.js App Router Example
 
-This example demonstrates how to integrate `@abac-admin/react` and `@abac-admin/nextjs` packages into a modern Next.js 14+ application using the App Router.
+This example demonstrates how to integrate `@devcraft-ts/abac-admin-react` and `@devcraft-ts/abac-admin-nextjs` packages into a modern Next.js 14+ application using the App Router.
 
 ## What This Example Shows
 
@@ -40,9 +40,9 @@ This example demonstrates how to integrate `@abac-admin/react` and `@abac-admin/
 ## Tech Stack
 
 - **Next.js 14+** - React framework with App Router
-- **@abac-admin/react** - Headless React hooks
-- **@abac-admin/nextjs** - Next.js utilities
-- **@abac-admin/core** - Core ABAC engine
+- **@devcraft-ts/abac-admin-react** - Headless React hooks
+- **@devcraft-ts/abac-admin-nextjs** - Next.js utilities
+- **@devcraft-ts/abac-admin-core** - Core ABAC engine
 - **TypeScript** - Type safety
 - **Tailwind CSS** - Styling
 - **Radix UI** - Headless UI components
@@ -155,7 +155,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ```tsx
 // app/policies/page.tsx
-import { ABACAdminClient, PolicyService } from '@abac-admin/core';
+import { ABACAdminClient, PolicyService } from '@devcraft-ts/abac-admin-core';
 
 async function getPolicies() {
   const client = new ABACAdminClient({
@@ -188,7 +188,7 @@ export default async function PoliciesPage() {
 ```tsx
 'use client';
 
-import { usePolicies } from '@abac-admin/react';
+import { usePolicies } from '@devcraft-ts/abac-admin-react';
 
 export function PolicyList() {
   const { policies, isLoading, createPolicy, deletePolicy } = usePolicies();
@@ -215,7 +215,7 @@ export function PolicyList() {
 ```tsx
 'use server';
 
-import { ABACAdminClient, PolicyService } from '@abac-admin/core';
+import { ABACAdminClient, PolicyService } from '@devcraft-ts/abac-admin-core';
 import { revalidatePath } from 'next/cache';
 
 export async function createPolicyAction(formData: FormData) {
@@ -246,7 +246,7 @@ export async function createPolicyAction(formData: FormData) {
 ```tsx
 // app/api/abac/policies/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { ABACAdminClient, PolicyService } from '@abac-admin/core';
+import { ABACAdminClient, PolicyService } from '@devcraft-ts/abac-admin-core';
 
 const client = new ABACAdminClient({
   baseURL: process.env.ABAC_API_URL!
@@ -286,7 +286,7 @@ export async function POST(request: NextRequest) {
 // components/providers/abac-provider.tsx
 'use client';
 
-import { ABACProvider } from '@abac-admin/react';
+import { ABACProvider } from '@devcraft-ts/abac-admin-react';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -443,8 +443,8 @@ Make sure hooks are only used in client components within the ABACProvider.
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [React Documentation](https://react.dev)
-- [@abac-admin/react Docs](../../packages/react/README.md)
-- [@abac-admin/nextjs Docs](../../packages/nextjs/README.md)
+- [@devcraft-ts/abac-admin-react Docs](../../packages/react/README.md)
+- [@devcraft-ts/abac-admin-nextjs Docs](../../packages/nextjs/README.md)
 
 ## License
 

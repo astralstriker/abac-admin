@@ -8,19 +8,19 @@ We're excited to announce the first release of ABAC Admin UI packages - a lightw
 
 All packages are now available on npm:
 
-- **[@astralstriker/abac-admin-core](https://www.npmjs.com/package/@astralstriker/abac-admin-core)** v1.0.0 (~23.6 KB)
+- **[@devcraft-ts/abac-admin--core](https://www.npmjs.com/package/@devcraft-ts/abac-admin--core)** v1.0.0 (~23.6 KB)
   - Framework-agnostic core library
   - Pure TypeScript/JavaScript
   - API client with Policy, Attribute, and Audit services
   - Type definitions & Zod schemas
 
-- **[@astralstriker/abac-admin-react](https://www.npmjs.com/package/@astralstriker/abac-admin-react)** v1.0.0 (~11.1 KB)
+- **[@devcraft-ts/abac-admin--react](https://www.npmjs.com/package/@devcraft-ts/abac-admin--react)** v1.0.0 (~11.1 KB)
   - Headless React hooks for custom UI
   - No required data fetching library
   - Optional TanStack Query/SWR support
   - Full UI control
 
-- **[@astralstriker/abac-admin-nextjs](https://www.npmjs.com/package/@astralstriker/abac-admin-nextjs)** v1.0.0 (~10.1 KB)
+- **[@devcraft-ts/abac-admin--nextjs](https://www.npmjs.com/package/@devcraft-ts/abac-admin--nextjs)** v1.0.0 (~10.1 KB)
   - Next.js server utilities
   - API route helpers
   - Authentication middleware
@@ -43,13 +43,13 @@ All packages are now available on npm:
 ### For React/Next.js Users
 
 ```bash
-npm install @astralstriker/abac-admin-react @astralstriker/abac-admin-nextjs zod
+npm install @devcraft-ts/abac-admin--react @devcraft-ts/abac-admin--nextjs zod
 ```
 
 ```tsx
 "use client";
 
-import { ABACProvider, usePolicies } from "@astralstriker/abac-admin-react";
+import { ABACProvider, usePolicies } from "@devcraft-ts/abac-admin--react";
 
 function PolicyList() {
   const { policies, isLoading, createPolicy } = usePolicies();
@@ -77,11 +77,11 @@ export default function App() {
 ### For Vanilla JS/Node.js
 
 ```bash
-npm install @astralstriker/abac-admin-core zod
+npm install @devcraft-ts/abac-admin--core zod
 ```
 
 ```typescript
-import { ABACAdminClient, PolicyService } from "@astralstriker/abac-admin-core";
+import { ABACAdminClient, PolicyService } from "@devcraft-ts/abac-admin--core";
 
 const client = new ABACAdminClient({
   baseURL: "https://api.example.com/abac",
@@ -121,16 +121,16 @@ const newPolicy = await policyService.create({
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │            Platform Packages (Thin Wrappers)                 │
-│  @astralstriker/abac-admin-nextjs (~10kb)                   │
+│  @devcraft-ts/abac-admin--nextjs (~10kb)                   │
 └─────────────────────────────────────────────────────────────┘
                             │
 ┌─────────────────────────────────────────────────────────────┐
-│  @astralstriker/abac-admin-react (Headless React Hooks)     │
+│  @devcraft-ts/abac-admin--react (Headless React Hooks)     │
 │  Size: ~11kb                                                │
 └─────────────────────────────────────────────────────────────┘
                             │
 ┌─────────────────────────────────────────────────────────────┐
-│  @astralstriker/abac-admin-core (Framework Agnostic - TINY)  │
+│  @devcraft-ts/abac-admin--core (Framework Agnostic - TINY)  │
 │  Size: ~24kb                                                │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -160,9 +160,9 @@ This release supports:
 
 - **GitHub Repository**: https://github.com/astralstriker/abac-admin
 - **npm Packages**:
-  - https://www.npmjs.com/package/@astralstriker/abac-admin-core
-  - https://www.npmjs.com/package/@astralstriker/abac-admin-react
-  - https://www.npmjs.com/package/@astralstriker/abac-admin-nextjs
+  - https://www.npmjs.com/package/@devcraft-ts/abac-admin--core
+  - https://www.npmjs.com/package/@devcraft-ts/abac-admin--react
+  - https://www.npmjs.com/package/@devcraft-ts/abac-admin--nextjs
 - **Issues**: https://github.com/astralstriker/abac-admin/issues
 - **License**: MIT
 

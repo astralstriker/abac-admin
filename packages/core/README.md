@@ -1,14 +1,14 @@
-# @abac-admin/core
+# @devcraft-ts/abac-admin-core
 
 > Lightweight, framework-agnostic core for ABAC Policy Administration
 
-[![npm version](https://img.shields.io/npm/v/@abac-admin/core.svg)](https://www.npmjs.com/package/@abac-admin/core)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@abac-admin/core)](https://bundlephobia.com/package/@abac-admin/core)
+[![npm version](https://img.shields.io/npm/v/@devcraft-ts/abac-admin-core.svg)](https://www.npmjs.com/package/@devcraft-ts/abac-admin-core)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@devcraft-ts/abac-admin-core)](https://bundlephobia.com/package/@devcraft-ts/abac-admin-core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
 
-`@abac-admin/core` is a minimal, framework-agnostic package that provides the foundational building blocks for ABAC (Attribute-Based Access Control) policy administration. It includes:
+`@devcraft-ts/abac-admin-core` is a minimal, framework-agnostic package that provides the foundational building blocks for ABAC (Attribute-Based Access Control) policy administration. It includes:
 
 - **API Client**: Pure fetch-based client for communicating with ABAC backends
 - **Type Definitions**: Comprehensive TypeScript types and Zod schemas
@@ -28,15 +28,15 @@
 ## Installation
 
 ```bash
-npm install @abac-admin/core zod
+npm install @devcraft-ts/abac-admin-core zod
 ```
 
 ```bash
-yarn add @abac-admin/core zod
+yarn add @devcraft-ts/abac-admin-core zod
 ```
 
 ```bash
-pnpm add @abac-admin/core zod
+pnpm add @devcraft-ts/abac-admin-core zod
 ```
 
 ## Quick Start
@@ -44,7 +44,7 @@ pnpm add @abac-admin/core zod
 ### Initialize the Client
 
 ```typescript
-import { ABACAdminClient, PolicyService } from '@abac-admin/core';
+import { ABACAdminClient, PolicyService } from '@devcraft-ts/abac-admin-core';
 
 const client = new ABACAdminClient({
   baseURL: 'https://api.example.com/abac',
@@ -98,7 +98,7 @@ await policyService.delete('policy-id');
 ### Building Conditions
 
 ```typescript
-import { ConditionBuilder } from '@abac-admin/core';
+import { ConditionBuilder } from '@devcraft-ts/abac-admin-core';
 
 // Simple condition
 const condition1 = ConditionBuilder.equals(
@@ -141,7 +141,7 @@ const policy = await policyService.create({
 ### Working with Attributes
 
 ```typescript
-import { AttributeService } from '@abac-admin/core';
+import { AttributeService } from '@devcraft-ts/abac-admin-core';
 
 const attributeService = new AttributeService(client);
 
@@ -177,7 +177,7 @@ const comparison = await attributeService.compareAttributes(
 ### Audit Logs
 
 ```typescript
-import { AuditService } from '@abac-admin/core';
+import { AuditService } from '@devcraft-ts/abac-admin-core';
 
 const auditService = new AuditService(client);
 
@@ -375,7 +375,7 @@ import type {
   PolicyTestResult,
   AuditLogResponse,
   AuditStatistics
-} from '@abac-admin/core';
+} from '@devcraft-ts/abac-admin-core';
 ```
 
 ## Error Handling
@@ -443,10 +443,10 @@ console.log(`Has more: ${auditLog.hasMore}`);
 
 This core package is framework-agnostic. For framework-specific integrations:
 
-- **React**: Use `@abac-admin/react` (headless hooks)
-- **Next.js**: Use `@abac-admin/nextjs` (server utilities)
-- **Vue**: Use `@abac-admin/vue` (composables) - Coming soon
-- **Angular**: Use `@abac-admin/angular` (services) - Coming soon
+- **React**: Use `@devcraft-ts/abac-admin-react` (headless hooks)
+- **Next.js**: Use `@devcraft-ts/abac-admin-nextjs` (server utilities)
+- **Vue**: Use `@devcraft-ts/abac-admin-vue` (composables) - Coming soon
+- **Angular**: Use `@devcraft-ts/abac-admin-angular` (services) - Coming soon
 
 ## Contributing
 

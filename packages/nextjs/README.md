@@ -1,14 +1,14 @@
-# @abac-admin/nextjs
+# @devcraft-ts/abac-admin-nextjs
 
 > Next.js utilities for ABAC Policy Administration - Server-side API routes and React hooks
 
-[![npm version](https://img.shields.io/npm/v/@abac-admin/nextjs.svg)](https://www.npmjs.com/package/@abac-admin/nextjs)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@abac-admin/nextjs)](https://bundlephobia.com/package/@abac-admin/nextjs)
+[![npm version](https://img.shields.io/npm/v/@devcraft-ts/abac-admin-nextjs.svg)](https://www.npmjs.com/package/@devcraft-ts/abac-admin-nextjs)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@devcraft-ts/abac-admin-nextjs)](https://bundlephobia.com/package/@devcraft-ts/abac-admin-nextjs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
 
-`@abac-admin/nextjs` provides everything you need to build a complete ABAC policy administration interface in Next.js. It combines server-side API route helpers with client-side React hooks for a seamless full-stack experience.
+`@devcraft-ts/abac-admin-nextjs` provides everything you need to build a complete ABAC policy administration interface in Next.js. It combines server-side API route helpers with client-side React hooks for a seamless full-stack experience.
 
 ## Features
 
@@ -17,21 +17,21 @@
 ✅ **Type-Safe** - Full TypeScript support throughout
 ✅ **Next.js App Router Ready** - Built for Next.js 13+ App Router
 ✅ **Automatic Validation** - Built-in Zod validation for all endpoints
-✅ **React Hooks Included** - Re-exports all hooks from `@abac-admin/react`
+✅ **React Hooks Included** - Re-exports all hooks from `@devcraft-ts/abac-admin-react`
 ✅ **Zero Config** - Works out of the box with sensible defaults
 
 ## Installation
 
 ```bash
-npm install @abac-admin/nextjs @abac-admin/core @abac-admin/react zod
+npm install @devcraft-ts/abac-admin-nextjs @devcraft-ts/abac-admin-core @devcraft-ts/abac-admin-react zod
 ```
 
 ```bash
-yarn add @abac-admin/nextjs @abac-admin/core @abac-admin/react zod
+yarn add @devcraft-ts/abac-admin-nextjs @devcraft-ts/abac-admin-core @devcraft-ts/abac-admin-react zod
 ```
 
 ```bash
-pnpm add @abac-admin/nextjs @abac-admin/core @abac-admin/react zod
+pnpm add @devcraft-ts/abac-admin-nextjs @devcraft-ts/abac-admin-core @devcraft-ts/abac-admin-react zod
 ```
 
 ## Quick Start
@@ -42,8 +42,8 @@ pnpm add @abac-admin/nextjs @abac-admin/core @abac-admin/react zod
 
 ```ts
 // app/api/abac/policies/route.ts
-import { createPolicyRoutes } from '@abac-admin/nextjs/server';
-import { ABACAdminClient } from '@abac-admin/core';
+import { createPolicyRoutes } from '@devcraft-ts/abac-admin-nextjs/server';
+import { ABACAdminClient } from '@devcraft-ts/abac-admin-core';
 
 const getClient = () => new ABACAdminClient({
   baseURL: process.env.ABAC_API_URL!,
@@ -57,7 +57,7 @@ export const { GET, POST } = createPolicyRoutes(getClient);
 
 ```ts
 // app/api/abac/policies/[id]/route.ts
-import { createPolicyRoutes } from '@abac-admin/nextjs/server';
+import { createPolicyRoutes } from '@devcraft-ts/abac-admin-nextjs/server';
 
 export const { PUT, DELETE } = createPolicyRoutes(getClient);
 ```
@@ -66,7 +66,7 @@ export const { PUT, DELETE } = createPolicyRoutes(getClient);
 
 ```ts
 // app/api/abac/attributes/[resourceType]/[resourceId]/route.ts
-import { createAttributeRoutes } from '@abac-admin/nextjs/server';
+import { createAttributeRoutes } from '@devcraft-ts/abac-admin-nextjs/server';
 
 export const { GET, POST } = createAttributeRoutes(getClient);
 ```
@@ -75,7 +75,7 @@ export const { GET, POST } = createAttributeRoutes(getClient);
 
 ```ts
 // app/api/abac/audit/route.ts
-import { createAuditRoutes } from '@abac-admin/nextjs/server';
+import { createAuditRoutes } from '@devcraft-ts/abac-admin-nextjs/server';
 
 export const { GET } = createAuditRoutes(getClient);
 ```
@@ -86,7 +86,7 @@ export const { GET } = createAuditRoutes(getClient);
 // app/admin/policies/page.tsx
 'use client';
 
-import { ABACProvider, usePolicies } from '@abac-admin/nextjs';
+import { ABACProvider, usePolicies } from '@devcraft-ts/abac-admin-nextjs';
 
 function PolicyList() {
   const { policies, isLoading, createPolicy, deletePolicy } = usePolicies();
@@ -118,7 +118,7 @@ export default function PoliciesPage() {
 
 ### Server-Side Utilities
 
-All server utilities are imported from `@abac-admin/nextjs/server`:
+All server utilities are imported from `@devcraft-ts/abac-admin-nextjs/server`:
 
 ```ts
 import {
@@ -126,7 +126,7 @@ import {
   createAttributeRoutes,
   createAuditRoutes,
   createAuthMiddleware
-} from '@abac-admin/nextjs/server';
+} from '@devcraft-ts/abac-admin-nextjs/server';
 ```
 
 #### createPolicyRoutes
@@ -216,7 +216,7 @@ export const { GET } = createAuditRoutes(getClient);
 Creates authentication middleware for protecting routes.
 
 ```ts
-import { createAuthMiddleware } from '@abac-admin/nextjs/server';
+import { createAuthMiddleware } from '@devcraft-ts/abac-admin-nextjs/server';
 import { cookies } from 'next/headers';
 
 const authMiddleware = createAuthMiddleware({
@@ -266,7 +266,7 @@ import {
   combineAuthOr,
   createRequestLogger,
   createRateLimiter
-} from '@abac-admin/nextjs/server';
+} from '@devcraft-ts/abac-admin-nextjs/server';
 
 // Require specific roles
 const authMiddleware = createAuthMiddleware({
@@ -315,7 +315,7 @@ const authMiddleware = createAuthMiddleware({
 
 ### Client-Side Hooks
 
-All React hooks are re-exported from `@abac-admin/react`. Import them from `@abac-admin/nextjs`:
+All React hooks are re-exported from `@devcraft-ts/abac-admin-react`. Import them from `@devcraft-ts/abac-admin-nextjs`:
 
 ```ts
 import {
@@ -324,10 +324,10 @@ import {
   usePolicy,
   useAttributes,
   useAuditLog
-} from '@abac-admin/nextjs';
+} from '@devcraft-ts/abac-admin-nextjs';
 ```
 
-For complete hook documentation, see [@abac-admin/react README](../react/README.md).
+For complete hook documentation, see [@devcraft-ts/abac-admin-react README](../react/README.md).
 
 ---
 
@@ -367,7 +367,7 @@ app/
 ### lib/abac-client.ts
 
 ```ts
-import { ABACAdminClient } from '@abac-admin/core';
+import { ABACAdminClient } from '@devcraft-ts/abac-admin-core';
 
 export function getABACClient() {
   return new ABACAdminClient({
@@ -382,7 +382,7 @@ export function getABACClient() {
 ### lib/auth-middleware.ts
 
 ```ts
-import { createAuthMiddleware, requireRoles } from '@abac-admin/nextjs/server';
+import { createAuthMiddleware, requireRoles } from '@devcraft-ts/abac-admin-nextjs/server';
 import { cookies } from 'next/headers';
 
 export const authMiddleware = createAuthMiddleware({
@@ -405,7 +405,7 @@ export const authMiddleware = createAuthMiddleware({
 ### app/api/abac/policies/route.ts
 
 ```ts
-import { createPolicyRoutes } from '@abac-admin/nextjs/server';
+import { createPolicyRoutes } from '@devcraft-ts/abac-admin-nextjs/server';
 import { getABACClient } from '@/lib/abac-client';
 import { authMiddleware } from '@/lib/auth-middleware';
 
@@ -420,7 +420,7 @@ export { GET: authMiddleware(GET), POST: authMiddleware(POST) };
 ```tsx
 'use client';
 
-import { ABACProvider } from '@abac-admin/nextjs';
+import { ABACProvider } from '@devcraft-ts/abac-admin-nextjs';
 
 export default function AdminLayout({
   children
@@ -443,7 +443,7 @@ export default function AdminLayout({
 ```tsx
 'use client';
 
-import { usePolicies } from '@abac-admin/nextjs';
+import { usePolicies } from '@devcraft-ts/abac-admin-nextjs';
 
 export default function PoliciesPage() {
   const {
@@ -579,7 +579,7 @@ import type {
   UsePoliciesResult,
   Policy,
   PolicyInput
-} from '@abac-admin/nextjs';
+} from '@devcraft-ts/abac-admin-nextjs';
 ```
 
 ---
@@ -645,9 +645,9 @@ For complete working examples, see:
 
 ## Related Packages
 
-- **[@abac-admin/core](../core)** - Framework-agnostic core (required)
-- **[@abac-admin/react](../react)** - React hooks (included)
-- **[@abac-admin/react-ui](../react-ui)** - Pre-built UI components (optional)
+- **[@devcraft-ts/abac-admin-core](../core)** - Framework-agnostic core (required)
+- **[@devcraft-ts/abac-admin-react](../react)** - React hooks (included)
+- **[@devcraft-ts/abac-admin-react-ui](../react-ui)** - Pre-built UI components (optional)
 
 ---
 

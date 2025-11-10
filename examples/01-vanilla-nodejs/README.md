@@ -1,6 +1,6 @@
 # Vanilla Node.js Example
 
-This example demonstrates how to use `@abac-admin/core` in a pure Node.js environment without any framework.
+This example demonstrates how to use `@devcraft-ts/abac-admin-core` in a pure Node.js environment without any framework.
 
 ## What This Example Shows
 
@@ -20,7 +20,7 @@ This example demonstrates how to use `@abac-admin/core` in a pure Node.js enviro
 ## Installation
 
 ```bash
-npm install @abac-admin/core zod
+npm install @devcraft-ts/abac-admin-core zod
 ```
 
 ## Running the Examples
@@ -92,7 +92,7 @@ This vanilla Node.js approach is perfect for:
 ### Client Initialization
 
 ```javascript
-import { ABACAdminClient } from '@abac-admin/core';
+import { ABACAdminClient } from '@devcraft-ts/abac-admin-core';
 
 const client = new ABACAdminClient({
   baseURL: process.env.ABAC_API_URL,
@@ -108,7 +108,7 @@ const client = new ABACAdminClient({
 All operations are organized into services:
 
 ```javascript
-import { PolicyService, AttributeService, AuditService } from '@abac-admin/core';
+import { PolicyService, AttributeService, AuditService } from '@devcraft-ts/abac-admin-core';
 
 const policyService = new PolicyService(client);
 const attributeService = new AttributeService(client);
@@ -130,8 +130,8 @@ try {
 
 ## Next Steps
 
-- Explore the React hooks package: `@abac-admin/react`
-- Check out the Next.js integration: `@abac-admin/nextjs`
+- Explore the React hooks package: `@devcraft-ts/abac-admin-react`
+- Check out the Next.js integration: `@devcraft-ts/abac-admin-nextjs`
 - See the full documentation: [Core Package Docs](../../packages/core/README.md)
 
 ## License

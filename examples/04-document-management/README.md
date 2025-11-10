@@ -406,7 +406,7 @@ describe('Document Access Control', () => {
 View complete audit logs:
 
 ```javascript
-import { AuditService } from '@abac-admin/core';
+import { AuditService } from '@devcraft-ts/abac-admin-core';
 
 const auditService = new AuditService(client);
 

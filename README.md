@@ -8,10 +8,10 @@
 
 The ABAC Admin UI packages provide a complete solution for managing ABAC policies in your application. Built with a **minimal footprint architecture**, you install only what you need:
 
-- **[@abac-admin/core](#abac-admincore)** - Framework-agnostic core (~15kb)
-- **[@abac-admin/react](#abac-adminreact)** - Headless React hooks (~30kb)
-- **[@abac-admin/nextjs](#abac-adminnextjs)** - Next.js utilities (~10kb)
-- **[@abac-admin/react-ui](#abac-adminreact-ui)** - Pre-built UI components (optional, ~130kb)
+- **[@devcraft-ts/abac-admin-core](#abac-admincore)** - Framework-agnostic core (~15kb)
+- **[@devcraft-ts/abac-admin-react](#abac-adminreact)** - Headless React hooks (~30kb)
+- **[@devcraft-ts/abac-admin-nextjs](#abac-adminnextjs)** - Next.js utilities (~10kb)
+- **[@devcraft-ts/abac-admin-react-ui](#abac-adminreact-ui)** - Pre-built UI components (optional, ~130kb)
 
 ### Key Features
 
@@ -28,7 +28,7 @@ The ABAC Admin UI packages provide a complete solution for managing ABAC policie
 ### For React/Next.js Users
 
 ```bash
-npm install @abac-admin/react @abac-admin/nextjs zod
+npm install @devcraft-ts/abac-admin-react @devcraft-ts/abac-admin-nextjs zod
 ```
 
 > **Note**: This project uses npm workspaces (npm v7+). No additional package manager needed!
@@ -36,7 +36,7 @@ npm install @abac-admin/react @abac-admin/nextjs zod
 ```tsx
 "use client";
 
-import { ABACProvider, usePolicies } from "@abac-admin/react";
+import { ABACProvider, usePolicies } from "@devcraft-ts/abac-admin-react";
 
 function PolicyList() {
   const { policies, isLoading, createPolicy } = usePolicies();
@@ -64,11 +64,11 @@ export default function App() {
 ### For Vanilla JS/Node.js
 
 ```bash
-npm install @abac-admin/core zod
+npm install @devcraft-ts/abac-admin-core zod
 ```
 
 ```typescript
-import { ABACAdminClient, PolicyService } from "@abac-admin/core";
+import { ABACAdminClient, PolicyService } from "@devcraft-ts/abac-admin-core";
 
 const client = new ABACAdminClient({
   baseURL: "https://api.example.com/abac",
@@ -95,7 +95,7 @@ const newPolicy = await policyService.create({
 
 ## 📦 Packages
 
-### @abac-admin/core
+### @devcraft-ts/abac-admin-core
 
 **Framework-agnostic core library**
 
@@ -105,13 +105,13 @@ const newPolicy = await policyService.create({
 - Policy, Attribute, and Audit services
 - Utilities (validators, formatters, condition builders)
 
-**[Documentation](./packages/core/README.md)** | **[npm](https://www.npmjs.com/package/@abac-admin/core)**
+**[Documentation](./packages/core/README.md)** | **[npm](https://www.npmjs.com/package/@devcraft-ts/abac-admin-core)**
 
 ```bash
-npm install @abac-admin/core zod
+npm install @devcraft-ts/abac-admin-core zod
 ```
 
-### @abac-admin/react
+### @devcraft-ts/abac-admin-react
 
 **Headless React hooks - bring your own UI**
 
@@ -120,10 +120,10 @@ npm install @abac-admin/core zod
 - Optional TanStack Query/SWR support via query factories
 - Full UI control
 
-**[Documentation](./packages/react/README.md)** | **[npm](https://www.npmjs.com/package/@abac-admin/react)**
+**[Documentation](./packages/react/README.md)** | **[npm](https://www.npmjs.com/package/@devcraft-ts/abac-admin-react)**
 
 ```bash
-npm install @abac-admin/react
+npm install @devcraft-ts/abac-admin-react
 ```
 
 **Hooks:**
@@ -134,7 +134,7 @@ npm install @abac-admin/react
 - `useAuditLog()` - View audit logs
 - `usePolicyTest()` - Test policy evaluation
 
-### @abac-admin/nextjs
+### @devcraft-ts/abac-admin-nextjs
 
 **Next.js server utilities**
 
@@ -143,13 +143,13 @@ npm install @abac-admin/react
 - Server-side utilities
 - Type-safe handlers
 
-**[Documentation](./packages/nextjs/README.md)** | **[npm](https://www.npmjs.com/package/@abac-admin/nextjs)**
+**[Documentation](./packages/nextjs/README.md)** | **[npm](https://www.npmjs.com/package/@devcraft-ts/abac-admin-nextjs)**
 
 ```bash
-npm install @abac-admin/nextjs
+npm install @devcraft-ts/abac-admin-nextjs
 ```
 
-### @abac-admin/react-ui
+### @devcraft-ts/abac-admin-react-ui
 
 **Pre-built UI components (Optional)**
 
@@ -158,10 +158,10 @@ npm install @abac-admin/nextjs
 - Customizable theming
 - Best for prototyping & quick setup
 
-**[Documentation](./packages/react-ui/README.md)** | **[npm](https://www.npmjs.com/package/@abac-admin/react-ui)**
+**[Documentation](./packages/react-ui/README.md)** | **[npm](https://www.npmjs.com/package/@devcraft-ts/abac-admin-react-ui)**
 
 ```bash
-npm install @abac-admin/react-ui
+npm install @devcraft-ts/abac-admin-react-ui
 ```
 
 ## 🏗️ Architecture
@@ -169,22 +169,22 @@ npm install @abac-admin/react-ui
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │            Platform Packages (Thin Wrappers)                 │
-│  @abac-admin/nextjs  │  @abac-admin/react-native  │  ...    │
+│  @devcraft-ts/abac-admin-nextjs  │  @devcraft-ts/abac-admin-react-native  │  ...    │
 │  Size: ~5-10kb      │  Size: ~5-10kb             │         │
 └─────────────────────────────────────────────────────────────┘
                             │
 ┌─────────────────────────────────────────────────────────────┐
-│  @abac-admin/react-ui (Optional - Pre-built Components)      │
+│  @devcraft-ts/abac-admin-react-ui (Optional - Pre-built Components)      │
 │  Size: ~100kb (with deps)                                   │
 └─────────────────────────────────────────────────────────────┘
                             │
 ┌─────────────────────────────────────────────────────────────┐
-│         @abac-admin/react (Headless React Hooks)             │
+│         @devcraft-ts/abac-admin-react (Headless React Hooks)             │
 │  Size: ~20-30kb                                             │
 └─────────────────────────────────────────────────────────────┘
                             │
 ┌─────────────────────────────────────────────────────────────┐
-│      @abac-admin/core (Framework Agnostic - TINY)            │
+│      @devcraft-ts/abac-admin-core (Framework Agnostic - TINY)            │
 │  Size: ~10-15kb                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -202,7 +202,7 @@ npm install @abac-admin/react-ui
 ### Pattern 1: Simple Hooks (Default)
 
 ```tsx
-import { usePolicies } from "@abac-admin/react";
+import { usePolicies } from "@devcraft-ts/abac-admin-react";
 
 function MyComponent() {
   const { policies, createPolicy } = usePolicies();
@@ -213,8 +213,8 @@ function MyComponent() {
 ### Pattern 2: With TanStack Query
 
 ```tsx
-import { useABACClient } from "@abac-admin/react";
-import { PolicyService } from "@abac-admin/core";
+import { useABACClient } from "@devcraft-ts/abac-admin-react";
+import { PolicyService } from "@devcraft-ts/abac-admin-core";
 import { useQuery } from "@tanstack/react-query";
 
 function MyComponent() {
@@ -231,8 +231,8 @@ function MyComponent() {
 ### Pattern 3: Pre-built UI
 
 ```tsx
-import { PolicyAdminApp } from "@abac-admin/react-ui";
-import "@abac-admin/react-ui/styles.css";
+import { PolicyAdminApp } from "@devcraft-ts/abac-admin-react-ui";
+import "@devcraft-ts/abac-admin-react-ui/styles.css";
 
 export default function AdminPage() {
   return <PolicyAdminApp config={{ baseURL: "/api/abac" }} />;
@@ -276,10 +276,10 @@ npm run dev
 ```
 abac-admin/
 ├── packages/
-│   ├── core/           # @abac-admin/core
-│   ├── react/          # @abac-admin/react
-│   ├── nextjs/         # @abac-admin/nextjs
-│   └── react-ui/       # @abac-admin/react-ui (optional)
+│   ├── core/           # @devcraft-ts/abac-admin-core
+│   ├── react/          # @devcraft-ts/abac-admin-react
+│   ├── nextjs/         # @devcraft-ts/abac-admin-nextjs
+│   └── react-ui/       # @devcraft-ts/abac-admin-react-ui (optional)
 ├── examples/
 │   ├── nextjs-headless/
 │   ├── nextjs-ui/
