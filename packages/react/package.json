@@ -1,6 +1,6 @@
 {
   "name": "@devcraft-ts/abac-admin-react",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Headless React hooks for ABAC Policy Administration - bring your own UI",
   "type": "module",
   "main": "./dist/index.js",
@@ -40,7 +40,7 @@
     }
   },
   "dependencies": {
-    "@devcraft-ts/abac-admin-core": "^1.0.3"
+    "@devcraft-ts/abac-admin-core": "^1.0.4"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^11.0.0",

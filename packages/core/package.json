@@ -1,6 +1,6 @@
 {
   "name": "@devcraft-ts/abac-admin-core",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Lightweight, framework-agnostic core for ABAC Policy Administration",
   "type": "module",
   "main": "./dist/index.js",
