@@ -11,6 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/Card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/Dialog";
 import { Input } from "../ui/Input";
 
 export interface AttributeManagerProps {
@@ -30,11 +38,13 @@ export const AttributeManager: React.FC<AttributeManagerProps> = ({
   onCreate,
   className,
 }) => {
-  const { attributes, isLoading, error, deleteAttribute } = useAttributes(
-    resourceType,
-    resourceId,
-  );
+  const { attributes, isLoading, error, deleteAttribute, setAttribute } =
+    useAttributes(resourceType, resourceId);
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [editingKey, setEditingKey] = React.useState<string | null>(null);
+  const [formData, setFormData] = React.useState({ key: "", value: "" });
+  const [formError, setFormError] = React.useState<string | null>(null);
 
   const filteredAttributes = React.useMemo(() => {
     if (!attributes) return [];
@@ -68,6 +78,74 @@ export const AttributeManager: React.FC<AttributeManagerProps> = ({
     }
   };
 
+  const handleOpenCreate = () => {
+    setEditingKey(null);
+    setFormData({ key: "", value: "" });
+    setFormError(null);
+    setIsDialogOpen(true);
+  };
+
+  const handleOpenEdit = (key: string) => {
+    setEditingKey(key);
+    const value =
+      typeof attributes[key] === "object"
+        ? JSON.stringify(attributes[key], null, 2)
+        : String(attributes[key]);
+    setFormData({ key, value });
+    setFormError(null);
+    setIsDialogOpen(true);
+    if (onEdit) onEdit(key);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setEditingKey(null);
+    setFormData({ key: "", value: "" });
+    setFormError(null);
+  };
+
+  const handleSave = async () => {
+    setFormError(null);
+
+    if (!formData.key.trim()) {
+      setFormError("Attribute key is required");
+      return;
+    }
+
+    if (!formData.value.trim()) {
+      setFormError("Attribute value is required");
+      return;
+    }
+
+    try {
+      let parsedValue: any = formData.value;
+
+      // Try to parse as JSON if it looks like JSON
+      if (
+        formData.value.trim().startsWith("{") ||
+        formData.value.trim().startsWith("[")
+      ) {
+        try {
+          parsedValue = JSON.parse(formData.value);
+        } catch {
+          // If JSON parse fails, treat as string
+        }
+      } else if (formData.value === "true" || formData.value === "false") {
+        parsedValue = formData.value === "true";
+      } else if (!isNaN(Number(formData.value))) {
+        parsedValue = Number(formData.value);
+      }
+
+      await setAttribute(formData.key, parsedValue);
+      handleCloseDialog();
+      if (onCreate && !editingKey) onCreate();
+    } catch (err) {
+      setFormError(
+        err instanceof Error ? err.message : "Failed to save attribute",
+      );
+    }
+  };
+
   if (error) {
     return (
       <Card className={className}>
@@ -95,16 +173,14 @@ export const AttributeManager: React.FC<AttributeManagerProps> = ({
               Manage attributes for {resourceType}: {resourceId}
             </CardDescription>
           </div>
-          {onCreate && (
-            <Button
-              onClick={onCreate}
-              variant="primary"
-              size="sm"
-              leftIcon={<Plus className="h-4 w-4" />}
-            >
-              New Attribute
-            </Button>
-          )}
+          <Button
+            onClick={handleOpenCreate}
+            variant="primary"
+            size="sm"
+            leftIcon={<Plus className="h-4 w-4" />}
+          >
+            New Attribute
+          </Button>
         </div>
       </CardHeader>
       <CardContent>
@@ -174,27 +250,23 @@ export const AttributeManager: React.FC<AttributeManagerProps> = ({
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    {onEdit && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onEdit(key)}
-                        leftIcon={<Edit className="h-4 w-4" />}
-                      >
-                        Edit
-                      </Button>
-                    )}
-                    {onDelete && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(key)}
-                        leftIcon={<Trash2 className="h-4 w-4" />}
-                        className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
-                      >
-                        Delete
-                      </Button>
-                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleOpenEdit(key)}
+                      leftIcon={<Edit className="h-4 w-4" />}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(key)}
+                      leftIcon={<Trash2 className="h-4 w-4" />}
+                      className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+                    >
+                      Delete
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -212,6 +284,72 @@ export const AttributeManager: React.FC<AttributeManagerProps> = ({
           </div>
         )}
       </CardContent>
+
+      {/* Create/Edit Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {editingKey ? "Edit Attribute" : "Create Attribute"}
+            </DialogTitle>
+            <DialogDescription>
+              {editingKey
+                ? `Update the value for attribute "${editingKey}"`
+                : "Add a new attribute to this resource"}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Attribute Key
+              </label>
+              <Input
+                value={formData.key}
+                onChange={(e) =>
+                  setFormData({ ...formData, key: e.target.value })
+                }
+                placeholder="e.g., role, department, level"
+                disabled={!!editingKey}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Attribute Value
+              </label>
+              <textarea
+                value={formData.value}
+                onChange={(e) =>
+                  setFormData({ ...formData, value: e.target.value })
+                }
+                placeholder='e.g., "admin", 42, true, ["tag1", "tag2"]'
+                className="w-full min-h-[100px] px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Supports strings, numbers, booleans, and JSON objects/arrays
+              </p>
+            </div>
+
+            {formError && (
+              <div className="p-3 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-lg">
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  {formError}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCloseDialog}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleSave}>
+              {editingKey ? "Save Changes" : "Create Attribute"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };

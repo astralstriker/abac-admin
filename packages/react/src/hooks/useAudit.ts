@@ -1,10 +1,10 @@
 import {
-    AuditService,
-    type AuditLogEntry,
-    type AuditLogFilter,
-    type AuditLogResponse,
+  AuditService,
+  type AuditLogEntry,
+  type AuditLogFilter,
+  type AuditLogResponse,
 } from "@devcraft-ts/abac-admin-core";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useABACClient } from "../context/ABACContext";
 
 export interface UseAuditLogResult {
@@ -63,13 +63,16 @@ export function useAuditLog(filters?: AuditLogFilter): UseAuditLogResult {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
+  // Use ref to store filters and compare stringified values to prevent infinite loops
+  const filtersRef = useRef<string>();
+  const currentFiltersString = JSON.stringify(filters);
+
   const fetchAuditLog = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response: AuditLogResponse = await auditService.getAuditLog(
-        filters
-      );
+      const response: AuditLogResponse =
+        await auditService.getAuditLog(filters);
       setEntries(response.entries);
       setTotal(response.total);
       setHasMore(response.hasMore);
@@ -84,8 +87,11 @@ export function useAuditLog(filters?: AuditLogFilter): UseAuditLogResult {
   }, [auditService, filters]);
 
   useEffect(() => {
-    fetchAuditLog();
-  }, [fetchAuditLog]);
+    if (filtersRef.current !== currentFiltersString) {
+      filtersRef.current = currentFiltersString;
+      fetchAuditLog();
+    }
+  }, [currentFiltersString, fetchAuditLog]);
 
   return {
     entries,
@@ -126,7 +132,7 @@ export function useAuditLog(filters?: AuditLogFilter): UseAuditLogResult {
 export function useEntityHistory(
   entityType: "policy" | "attribute",
   entityId: string,
-  limit?: number
+  limit?: number,
 ) {
   const client = useABACClient();
   const auditService = useMemo(() => new AuditService(client), [client]);
@@ -147,12 +153,14 @@ export function useEntityHistory(
       const data = await auditService.getEntityHistory(
         entityType,
         entityId,
-        limit
+        limit,
       );
       setEntries(data);
     } catch (err) {
       const error =
-        err instanceof Error ? err : new Error("Failed to fetch entity history");
+        err instanceof Error
+          ? err
+          : new Error("Failed to fetch entity history");
       setError(error);
       console.error("Failed to fetch entity history:", error);
     } finally {
@@ -212,7 +220,7 @@ export function useUserActivity(
     entityType?: "policy" | "attribute";
     limit?: number;
     offset?: number;
-  }
+  },
 ) {
   const client = useABACClient();
   const auditService = useMemo(() => new AuditService(client), [client]);
@@ -222,6 +230,10 @@ export function useUserActivity(
   const [hasMore, setHasMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+
+  // Use ref to store options and compare stringified values to prevent infinite loops
+  const optionsRef = useRef<string>();
+  const currentOptionsString = JSON.stringify(options);
 
   const fetchUserActivity = useCallback(async () => {
     if (!userId) {
@@ -234,7 +246,7 @@ export function useUserActivity(
     try {
       const response: AuditLogResponse = await auditService.getUserActivity(
         userId,
-        options
+        options,
       );
       setEntries(response.entries);
       setTotal(response.total);
@@ -250,8 +262,11 @@ export function useUserActivity(
   }, [auditService, userId, options]);
 
   useEffect(() => {
-    fetchUserActivity();
-  }, [fetchUserActivity]);
+    if (optionsRef.current !== currentOptionsString) {
+      optionsRef.current = currentOptionsString;
+      fetchUserActivity();
+    }
+  }, [currentOptionsString, fetchUserActivity, userId]);
 
   return {
     entries,
