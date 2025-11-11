@@ -10,6 +10,108 @@ export const auditLogStore: any[] = [];
 // Initialize with sample data
 function initializeSampleData() {
   if (attributesStore.size === 0) {
+    // Subject attributes (Who is making the request)
+    attributesStore.set("subject:user-123", {
+      role: "admin",
+      department: "engineering",
+      level: 5,
+      verified: true,
+      clearanceLevel: "top-secret",
+      employeeType: "full-time",
+      joinDate: "2023-01-15",
+      permissions: ["read", "write", "delete"],
+      securityGroups: ["admins", "engineering", "security-team"],
+    });
+
+    attributesStore.set("subject:user-456", {
+      role: "viewer",
+      department: "sales",
+      level: 2,
+      verified: true,
+      clearanceLevel: "public",
+      employeeType: "contractor",
+      permissions: ["read"],
+      securityGroups: ["sales"],
+    });
+
+    // Resource attributes (What is being accessed)
+    attributesStore.set("resource:document-456", {
+      type: "document",
+      classification: "confidential",
+      owner: "user-123",
+      createdAt: "2024-01-10",
+      tags: ["finance", "Q1", "report"],
+      version: 3,
+      sensitivity: "high",
+      dataClassification: "pii",
+    });
+
+    attributesStore.set("resource:report-789", {
+      type: "report",
+      classification: "public",
+      owner: "user-456",
+      createdAt: "2024-02-15",
+      tags: ["sales", "monthly"],
+      version: 1,
+      sensitivity: "low",
+    });
+
+    // Action attributes (What operation is being performed)
+    attributesStore.set("action:read-operation", {
+      operationType: "read",
+      riskLevel: "low",
+      requiresApproval: false,
+      auditLevel: "basic",
+      category: "data-access",
+    });
+
+    attributesStore.set("action:delete-operation", {
+      operationType: "delete",
+      riskLevel: "high",
+      requiresApproval: true,
+      auditLevel: "detailed",
+      category: "data-modification",
+      reversible: false,
+    });
+
+    attributesStore.set("action:write-operation", {
+      operationType: "write",
+      riskLevel: "medium",
+      requiresApproval: false,
+      auditLevel: "standard",
+      category: "data-modification",
+      reversible: true,
+    });
+
+    // Environment attributes (Context of the request)
+    attributesStore.set("environment:production", {
+      environmentType: "production",
+      region: "us-east-1",
+      timeZone: "America/New_York",
+      complianceZone: "regulated",
+      securityLevel: "high",
+      maintenanceWindow: false,
+    });
+
+    attributesStore.set("environment:development", {
+      environmentType: "development",
+      region: "us-west-2",
+      timeZone: "America/Los_Angeles",
+      complianceZone: "non-regulated",
+      securityLevel: "low",
+      maintenanceWindow: false,
+    });
+
+    attributesStore.set("environment:business-hours", {
+      contextType: "time-based",
+      businessHours: true,
+      currentTime: "14:30",
+      dayOfWeek: "Tuesday",
+      allowedIpRange: "10.0.0.0/8",
+      vpnRequired: false,
+    });
+
+    // Legacy domain-specific types for backwards compatibility
     attributesStore.set("user:user-123", {
       role: "admin",
       department: "engineering",
@@ -33,6 +135,15 @@ function initializeSampleData() {
       size: "enterprise",
       country: "US",
       active: true,
+    });
+
+    attributesStore.set("company:company-001", {
+      name: "Tech Solutions Inc",
+      industry: "Software",
+      size: "startup",
+      country: "CA",
+      active: true,
+      founded: "2020",
     });
   }
 

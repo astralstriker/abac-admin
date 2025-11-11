@@ -1,6 +1,6 @@
 {
   "name": "@devcraft-ts/abac-admin-react-ui",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Pre-built UI components with dark/light theme support for ABAC Policy Administration and modern React applications - batteries included",
   "type": "module",
   "main": "./dist/index.js",
@@ -30,6 +30,7 @@
     "build": "tsup src/index.ts --format esm,cjs --dts --external react,react-dom --minify && npm run build:css",
     "build:css": "tailwindcss -i ./src/styles/globals.css -o ./dist/styles.css --minify",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch --external react,react-dom",
+    "test": "echo 'No tests for react-ui package yet'",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"

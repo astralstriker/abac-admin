@@ -35,6 +35,12 @@ export const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
   const [selectedAction, setSelectedAction] = React.useState<string | null>(
     null,
   );
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  // Client-side only mounting to prevent hydration issues with date formatting
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Auto-refresh functionality
   React.useEffect(() => {
@@ -216,7 +222,11 @@ export const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
                       {getActionBadge(entry.action)}
                       <Badge variant="default">{entry.entityType}</Badge>
                       <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {formatDate(new Date(entry.timestamp))}
+                        {isMounted
+                          ? formatDate(new Date(entry.timestamp))
+                          : new Date(entry.timestamp)
+                              .toISOString()
+                              .split("T")[0]}
                       </span>
                     </div>
                     <div className="space-y-2">

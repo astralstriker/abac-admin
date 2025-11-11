@@ -1,12 +1,18 @@
+import {
+  ComparisonOperator,
+  type Effect,
+  type ABACPolicy as Policy,
+} from "abac-engine";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Policy, PolicyInput, PolicyUpdate } from "../schemas/policy";
 import type { ABACAdminClient } from "./client";
 import {
   PolicyService,
   type PolicyExportResult,
   type PolicyImportResult,
+  type PolicyInput,
   type PolicyTestRequest,
   type PolicyTestResult,
+  type PolicyUpdate,
 } from "./policies";
 
 describe("PolicyService", () => {
@@ -15,20 +21,20 @@ describe("PolicyService", () => {
 
   const mockPolicy: Policy = {
     id: "policy-1",
-    policyId: "test-policy",
     version: "1.0.0",
-    effect: "PERMIT",
+    effect: "Permit" as Effect,
     description: "Test policy",
-    conditions: { type: "equals", left: "a", right: "b" },
-    isActive: true,
-    category: "test",
-    tags: ["test-tag"],
-    createdBy: "user-1",
-    createdAt: "2024-01-01T00:00:00.000Z",
-    updatedBy: null,
-    updatedAt: "2024-01-01T00:00:00.000Z",
-    deletedAt: null,
-    deletedBy: null,
+    condition: {
+      operator: ComparisonOperator.Equals,
+      left: { category: "subject", attributeId: "role" },
+      right: "admin",
+    },
+    priority: 100,
+    metadata: {
+      createdBy: "user-1",
+      createdAt: new Date("2024-01-01T00:00:00.000Z"),
+      tags: ["test-tag"],
+    },
   };
 
   beforeEach(() => {
@@ -147,19 +153,26 @@ describe("PolicyService", () => {
   describe("create", () => {
     it("should create a new policy", async () => {
       const policyInput: PolicyInput = {
-        policyId: "new-policy",
         version: "1.0.0",
-        effect: "PERMIT",
+        effect: "Permit" as Effect,
         description: "New policy",
-        conditions: { type: "equals", left: "a", right: "b" },
-        isActive: true,
-        category: "test",
-        tags: ["new"],
-        createdBy: "user-1",
-        updatedBy: null,
+        condition: {
+          operator: ComparisonOperator.Equals,
+          left: { category: "subject", attributeId: "role" },
+          right: "admin",
+        },
+        priority: 100,
+        metadata: {
+          createdBy: "user-1",
+          tags: ["new"],
+        },
       };
 
-      const createdPolicy = { ...mockPolicy, ...policyInput, id: "policy-2" };
+      const createdPolicy: Policy = {
+        ...mockPolicy,
+        id: "policy-2",
+        ...policyInput,
+      };
       vi.mocked(mockClient.post).mockResolvedValue(createdPolicy);
 
       const result = await policyService.create(policyInput);
@@ -184,10 +197,10 @@ describe("PolicyService", () => {
     it("should update an existing policy", async () => {
       const policyUpdate: PolicyUpdate = {
         description: "Updated description",
-        isActive: false,
+        priority: 200,
       };
 
-      const updatedPolicy = { ...mockPolicy, ...policyUpdate };
+      const updatedPolicy: Policy = { ...mockPolicy, ...policyUpdate };
       vi.mocked(mockClient.put).mockResolvedValue(updatedPolicy);
 
       const result = await policyService.update("policy-1", policyUpdate);

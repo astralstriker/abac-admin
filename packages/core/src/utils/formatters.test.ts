@@ -1,6 +1,6 @@
+import type { Condition, Effect, ABACPolicy as Policy } from "abac-engine";
 import { describe, expect, it } from "vitest";
 import type { AuditLogEntry } from "../schemas/audit";
-import type { Condition, Policy } from "../schemas/policy";
 import {
   formatAttributeValue,
   formatAuditAction,
@@ -165,12 +165,12 @@ describe("formatRelativeTime", () => {
 });
 
 describe("formatPolicyEffect", () => {
-  it("should format PERMIT as Allow", () => {
-    expect(formatPolicyEffect("PERMIT")).toBe("Allow");
+  it("should format Permit as Allow", () => {
+    expect(formatPolicyEffect("Permit" as Effect)).toBe("Allow");
   });
 
-  it("should format DENY as Deny", () => {
-    expect(formatPolicyEffect("DENY")).toBe("Deny");
+  it("should format Deny as Deny", () => {
+    expect(formatPolicyEffect("Deny" as Effect)).toBe("Deny");
   });
 });
 
@@ -222,8 +222,11 @@ describe("formatConditionOperator", () => {
 
 describe("formatConditionValue", () => {
   it("should format attribute references", () => {
-    const result = formatConditionValue({ category: "user", key: "role" });
-    expect(result).toBe("user.role");
+    const result = formatConditionValue({
+      category: "subject",
+      attributeId: "role",
+    });
+    expect(result).toBe("subject.role");
   });
 
   it("should format arrays", () => {
@@ -246,82 +249,42 @@ describe("formatConditionValue", () => {
 });
 
 describe("formatCondition", () => {
-  it("should format simple comparison conditions", () => {
-    const condition: Condition = { type: "equals", left: "a", right: "b" };
+  it("should format comparison conditions as JSON", () => {
+    const condition: Condition = {
+      operator: "==" as any,
+      left: { category: "subject" as const, attributeId: "role" },
+      right: "admin",
+    };
     const result = formatCondition(condition);
-    expect(result).toContain("=");
-    expect(result).toContain('"a"');
-    expect(result).toContain('"b"');
+    expect(result).toContain('"operator"');
+    expect(result).toContain('"=="');
   });
 
-  it("should format AND conditions", () => {
+  it("should format logical conditions as JSON", () => {
     const condition: Condition = {
-      type: "and",
-      nested: [
-        { type: "equals", left: "a", right: "b" },
-        { type: "equals", left: "c", right: "d" },
+      operator: "and" as any,
+      conditions: [
+        {
+          operator: "==" as any,
+          left: { category: "subject" as const, attributeId: "role" },
+          right: "admin",
+        },
       ],
     };
     const result = formatCondition(condition);
-    expect(result).toContain("(");
-    expect(result).toContain(")");
-  });
-
-  it("should format OR conditions", () => {
-    const condition: Condition = {
-      type: "or",
-      nested: [
-        { type: "equals", left: "a", right: "b" },
-        { type: "equals", left: "c", right: "d" },
-      ],
-    };
-    const result = formatCondition(condition);
-    expect(result).toContain("OR");
-  });
-
-  it("should format NOT conditions", () => {
-    const condition: Condition = {
-      type: "not",
-      nested: [{ type: "equals", left: "a", right: "b" }],
-    };
-    const result = formatCondition(condition);
-    expect(result).toContain("NOT");
-  });
-
-  it("should format NOT conditions with empty nested array", () => {
-    const condition: Condition = {
-      type: "not",
-      nested: [],
-    };
-    const result = formatCondition(condition);
-    expect(result).toContain("NOT");
-    expect(result).toBe("NOT ");
-  });
-
-  it("should format AND conditions with no nested array", () => {
-    const condition: Condition = {
-      type: "and",
-      nested: undefined as any,
-    };
-    const result = formatCondition(condition);
-    expect(result).toBe("()");
-  });
-
-  it("should format OR conditions with no nested array", () => {
-    const condition: Condition = {
-      type: "or",
-      nested: undefined as any,
-    };
-    const result = formatCondition(condition);
-    expect(result).toBe("()");
+    expect(result).toContain('"operator"');
+    expect(result).toContain('"and"');
   });
 
   it("should indent nested conditions", () => {
     const condition: Condition = {
-      type: "and",
-      nested: [
-        { type: "equals", left: "a", right: "b" },
-        { type: "equals", left: "c", right: "d" },
+      operator: "and" as any,
+      conditions: [
+        {
+          operator: "==" as any,
+          left: { category: "subject" as const, attributeId: "role" },
+          right: "admin",
+        },
       ],
     };
     const result = formatCondition(condition, 1);
@@ -331,73 +294,30 @@ describe("formatCondition", () => {
 
 describe("formatConditionCompact", () => {
   it("should format simple conditions compactly", () => {
-    const condition: Condition = { type: "equals", left: "a", right: "b" };
+    const condition: Condition = {
+      operator: "==" as any,
+      left: { category: "subject" as const, attributeId: "role" },
+      right: "admin",
+    };
     const result = formatConditionCompact(condition);
     expect(result).not.toContain("\n");
+    expect(result).toContain('"operator"');
   });
 
-  it("should format nested AND conditions compactly", () => {
+  it("should format nested conditions as compact JSON", () => {
     const condition: Condition = {
-      type: "and",
-      nested: [
-        { type: "equals", left: "a", right: "b" },
-        { type: "equals", left: "c", right: "d" },
+      operator: "and" as any,
+      conditions: [
+        {
+          operator: "==" as any,
+          left: { category: "subject" as const, attributeId: "role" },
+          right: "admin",
+        },
       ],
     };
     const result = formatConditionCompact(condition);
-    expect(result).toContain("AND");
     expect(result).not.toContain("\n");
-  });
-
-  it("should format nested OR conditions compactly", () => {
-    const condition: Condition = {
-      type: "or",
-      nested: [
-        { type: "equals", left: "a", right: "b" },
-        { type: "equals", left: "c", right: "d" },
-      ],
-    };
-    const result = formatConditionCompact(condition);
-    expect(result).toContain("OR");
-    expect(result).not.toContain("\n");
-  });
-
-  it("should format NOT conditions compactly", () => {
-    const condition: Condition = {
-      type: "not",
-      nested: [{ type: "equals", left: "a", right: "b" }],
-    };
-    const result = formatConditionCompact(condition);
-    expect(result).toContain("NOT");
-    expect(result).not.toContain("\n");
-  });
-
-  it("should format NOT conditions with empty nested array compactly", () => {
-    const condition: Condition = {
-      type: "not",
-      nested: [],
-    };
-    const result = formatConditionCompact(condition);
-    expect(result).toContain("NOT");
-    expect(result).toBe("NOT ");
-  });
-
-  it("should format AND conditions with no nested array compactly", () => {
-    const condition: Condition = {
-      type: "and",
-      nested: undefined as any,
-    };
-    const result = formatConditionCompact(condition);
-    expect(result).toBe("()");
-  });
-
-  it("should format OR conditions with no nested array compactly", () => {
-    const condition: Condition = {
-      type: "or",
-      nested: undefined as any,
-    };
-    const result = formatConditionCompact(condition);
-    expect(result).toBe("()");
+    expect(result).toContain("operator");
   });
 });
 
@@ -634,50 +554,42 @@ describe("truncate", () => {
 });
 
 describe("formatPolicySummary", () => {
-  it("should format active policy summary", () => {
+  it("should format policy with priority", () => {
     const policy: Policy = {
       id: "policy-1",
-      policyId: "test-policy",
       version: "1.0.0",
       description: "Test policy",
-      effect: "PERMIT",
-      conditions: { type: "equals", left: "a", right: "b" },
-      category: "access",
-      tags: ["test"],
-      isActive: true,
-      createdBy: "user-1",
-      createdAt: "2024-01-01T00:00:00Z",
-      updatedBy: "user-1",
-      updatedAt: "2024-01-01T00:00:00Z",
-      deletedAt: null,
-      deletedBy: null,
+      effect: "Permit" as Effect,
+      priority: 100,
+      metadata: {
+        createdBy: "user-1",
+        createdAt: new Date("2024-01-01T00:00:00Z"),
+        tags: ["test"],
+      },
     };
     const result = formatPolicySummary(policy);
-    expect(result).toContain("Active");
+    expect(result).toContain("policy-1");
+    expect(result).toContain("v1.0.0");
     expect(result).toContain("Allow");
+    expect(result).toContain("Priority: 100");
   });
 
-  it("should format inactive policy summary", () => {
+  it("should format policy without priority", () => {
     const policy: Policy = {
-      id: "policy-1",
-      policyId: "test-policy",
-      version: "1.0.0",
+      id: "policy-2",
+      version: "2.0.0",
       description: "Test policy",
-      effect: "DENY",
-      conditions: { type: "equals", left: "a", right: "b" },
-      category: "access",
-      tags: [],
-      isActive: false,
-      createdBy: "user-1",
-      createdAt: "2024-01-01T00:00:00Z",
-      updatedBy: "user-1",
-      updatedAt: "2024-01-01T00:00:00Z",
-      deletedAt: null,
-      deletedBy: null,
+      effect: "Deny" as Effect,
+      metadata: {
+        createdBy: "user-1",
+        createdAt: new Date("2024-01-01T00:00:00Z"),
+      },
     };
     const result = formatPolicySummary(policy);
-    expect(result).toContain("Inactive");
+    expect(result).toContain("policy-2");
+    expect(result).toContain("v2.0.0");
     expect(result).toContain("Deny");
+    expect(result).not.toContain("Priority");
   });
 });
 

@@ -24,7 +24,16 @@ export class ABACAdminClient {
     const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
 
     try {
-      const response = await fetch(`${this.config.baseURL}${endpoint}`, {
+      // Normalize URL construction: ensure single slash between base and endpoint
+      const normalizedEndpoint = endpoint.startsWith("/")
+        ? endpoint
+        : `/${endpoint}`;
+      const baseURL = this.config.baseURL.endsWith("/")
+        ? this.config.baseURL.slice(0, -1)
+        : this.config.baseURL;
+      const url = `${baseURL}${normalizedEndpoint}`;
+
+      const response = await fetch(url, {
         ...options,
         signal: controller.signal,
         headers: {

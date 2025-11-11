@@ -1,6 +1,20 @@
-import type { Policy, PolicyInput, PolicyUpdate } from '../schemas/policy';
-import { PolicySchema } from '../schemas/policy';
-import type { ABACAdminClient } from './client';
+import type { ABACPolicy as Policy } from "abac-engine";
+import type { ABACAdminClient } from "./client";
+
+// Admin UI extensions for policy management
+export interface PolicyInput {
+  version: string;
+  description?: string;
+  target?: Policy["target"];
+  condition?: Policy["condition"];
+  effect: Policy["effect"];
+  priority?: number;
+  obligations?: Policy["obligations"];
+  advice?: Policy["advice"];
+  metadata?: Policy["metadata"];
+}
+
+export interface PolicyUpdate extends Partial<PolicyInput> {}
 
 export interface PolicyFilters {
   category?: string;
@@ -20,7 +34,7 @@ export interface PolicyTestRequest {
 }
 
 export interface PolicyTestResult {
-  decision: 'Permit' | 'Deny';
+  decision: "Permit" | "Deny";
   matchedPolicies: string[];
   evaluationTime: number;
   details?: Record<string, any>;
@@ -50,25 +64,22 @@ export class PolicyService {
     if (filters?.isActive !== undefined)
       params.isActive = String(filters.isActive);
     if (filters?.search) params.search = filters.search;
-    if (filters?.tags) params.tags = filters.tags.join(',');
+    if (filters?.tags) params.tags = filters.tags.join(",");
 
-    const data = await this.client.get<unknown[]>('/policies', params);
-    return data.map(item => PolicySchema.parse(item));
+    const data = await this.client.get<Policy[]>("/policies", params);
+    return data;
   }
 
   async get(id: string): Promise<Policy> {
-    const data = await this.client.get<unknown>(`/policies/${id}`);
-    return PolicySchema.parse(data);
+    return this.client.get<Policy>(`/policies/${id}`);
   }
 
   async create(policy: PolicyInput): Promise<Policy> {
-    const data = await this.client.post<unknown>('/policies', policy);
-    return PolicySchema.parse(data);
+    return this.client.post<Policy>("/policies", policy);
   }
 
   async update(id: string, policy: PolicyUpdate): Promise<Policy> {
-    const data = await this.client.put<unknown>(`/policies/${id}`, policy);
-    return PolicySchema.parse(data);
+    return this.client.put<Policy>(`/policies/${id}`, policy);
   }
 
   async delete(id: string): Promise<void> {
@@ -76,68 +87,62 @@ export class PolicyService {
   }
 
   async activate(id: string): Promise<Policy> {
-    const data = await this.client.patch<unknown>(
-      `/policies/${id}/activate`,
-      {}
-    );
-    return PolicySchema.parse(data);
+    return this.client.patch<Policy>(`/policies/${id}/activate`, {});
   }
 
   async deactivate(id: string): Promise<Policy> {
-    const data = await this.client.patch<unknown>(
-      `/policies/${id}/deactivate`,
-      {}
-    );
-    return PolicySchema.parse(data);
+    return this.client.patch<Policy>(`/policies/${id}/deactivate`, {});
   }
 
   async test(request: PolicyTestRequest): Promise<PolicyTestResult> {
-    return this.client.post<PolicyTestResult>('/policies/test', request);
+    return this.client.post<PolicyTestResult>("/policies/test", request);
   }
 
   async getVersions(policyId: string): Promise<Policy[]> {
-    const data = await this.client.get<unknown[]>(
-      `/policies/${policyId}/versions`
-    );
-    return data.map(item => PolicySchema.parse(item));
+    return this.client.get<Policy[]>(`/policies/${policyId}/versions`);
   }
 
   async export(ids?: string[]): Promise<PolicyExportResult> {
-    const params: Record<string, string> = ids ? { ids: ids.join(',') } : {};
-    return this.client.get<PolicyExportResult>('/policies/export', params);
+    const params: Record<string, string> = ids ? { ids: ids.join(",") } : {};
+    return this.client.get<PolicyExportResult>("/policies/export", params);
   }
 
   async import(file: File | Blob): Promise<PolicyImportResult> {
     const formData = new FormData();
-    formData.append('file', file);
-    return this.client.post<PolicyImportResult>('/policies/import', formData);
+    formData.append("file", file);
+    return this.client.post<PolicyImportResult>("/policies/import", formData);
   }
 
   async duplicate(id: string, newPolicyId?: string): Promise<Policy> {
-    const data = await this.client.post<unknown>(`/policies/${id}/duplicate`, {
-      newPolicyId
+    return this.client.post<Policy>(`/policies/${id}/duplicate`, {
+      newPolicyId,
     });
-    return PolicySchema.parse(data);
   }
 
-  async bulkActivate(ids: string[]): Promise<{ success: number; failed: number }> {
+  async bulkActivate(
+    ids: string[],
+  ): Promise<{ success: number; failed: number }> {
     return this.client.post<{ success: number; failed: number }>(
-      '/policies/bulk/activate',
-      { ids }
+      "/policies/bulk/activate",
+      { ids },
     );
   }
 
-  async bulkDeactivate(ids: string[]): Promise<{ success: number; failed: number }> {
+  async bulkDeactivate(
+    ids: string[],
+  ): Promise<{ success: number; failed: number }> {
     return this.client.post<{ success: number; failed: number }>(
-      '/policies/bulk/deactivate',
-      { ids }
+      "/policies/bulk/deactivate",
+      { ids },
     );
   }
 
-  async bulkDelete(ids: string[]): Promise<{ success: number; failed: number }> {
+  async bulkDelete(
+    ids: string[],
+  ): Promise<{ success: number; failed: number }> {
     return this.client.post<{ success: number; failed: number }>(
-      '/policies/bulk/delete',
-      { ids }
+      "/policies/bulk/delete",
+      { ids },
     );
   }
 
@@ -146,9 +151,8 @@ export class PolicyService {
     if (filters?.category) params.category = filters.category;
     if (filters?.isActive !== undefined)
       params.isActive = String(filters.isActive);
-    if (filters?.tags) params.tags = filters.tags.join(',');
+    if (filters?.tags) params.tags = filters.tags.join(",");
 
-    const data = await this.client.get<unknown[]>('/policies/search', params);
-    return data.map(item => PolicySchema.parse(item));
+    return this.client.get<Policy[]>("/policies/search", params);
   }
 }

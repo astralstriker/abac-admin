@@ -1,41 +1,39 @@
-import { policies } from "@/lib/policies-data";
+import { createPolicy, getAllPolicies } from "@/lib/policies-data";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  return NextResponse.json(policies);
+  return NextResponse.json(getAllPolicies());
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    if (!body.policyId || !body.effect || !body.conditions) {
+    if (!body.id || !body.effect) {
       return NextResponse.json(
-        { error: "Missing required fields: policyId, effect, conditions" },
+        { error: "Missing required fields: id, effect" },
         { status: 400 },
       );
     }
 
     const newPolicy = {
-      id: String(policies.length + 1),
-      policyId: body.policyId,
+      id: body.id,
       version: body.version || "1.0.0",
       effect: body.effect,
-      description: body.description || "",
-      conditions: body.conditions,
-      isActive: body.isActive !== false,
-      category: body.category || "default",
-      tags: body.tags || [],
-      createdBy: body.createdBy || "user",
-      createdAt: new Date().toISOString(),
-      updatedBy: null,
-      updatedAt: new Date().toISOString(),
-      deletedAt: null,
-      deletedBy: null,
+      description: body.description,
+      target: body.target,
+      condition: body.condition,
+      priority: body.priority,
+      obligations: body.obligations,
+      advice: body.advice,
+      metadata: body.metadata || {
+        createdAt: new Date(),
+        createdBy: "api",
+      },
     };
 
-    policies.push(newPolicy);
-    return NextResponse.json(newPolicy, { status: 201 });
+    const created = createPolicy(newPolicy);
+    return NextResponse.json(created, { status: 201 });
   } catch (error) {
     console.error("Error creating policy:", error);
     return NextResponse.json(

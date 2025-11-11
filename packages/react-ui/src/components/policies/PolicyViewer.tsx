@@ -1,4 +1,5 @@
 import { usePolicy } from "@devcraft-ts/abac-admin-react";
+import { Effect } from "abac-engine";
 import { AlertCircle, CheckCircle2, Code2, Play, XCircle } from "lucide-react";
 import React from "react";
 import { formatDate } from "../../lib/utils";
@@ -112,8 +113,21 @@ export const PolicyViewer: React.FC<PolicyViewerProps> = ({
     condition: any,
     level: number = 0,
   ): React.ReactNode => {
+    if (!condition) return null;
+
     const indent = level * 24;
-    const isLogical = ["and", "or", "not"].includes(condition.type);
+    const isLogical = condition.conditions !== undefined;
+    const isFunction = condition.function !== undefined;
+
+    const formatValue = (val: any): string => {
+      if (typeof val === "object" && val !== null) {
+        if ("category" in val && "attributeId" in val) {
+          return `${val.category}.${val.attributeId}`;
+        }
+        return JSON.stringify(val);
+      }
+      return String(val);
+    };
 
     return (
       <div
@@ -123,20 +137,22 @@ export const PolicyViewer: React.FC<PolicyViewerProps> = ({
       >
         <div className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-800">
           <Badge
-            variant={isLogical ? "info" : "default"}
+            variant={isLogical ? "info" : isFunction ? "warning" : "default"}
             className="mt-0.5 shrink-0"
           >
-            {condition.type.toUpperCase()}
+            {condition.operator?.toUpperCase() ||
+              condition.function?.toUpperCase() ||
+              "UNKNOWN"}
           </Badge>
           <div className="flex-1 space-y-1 text-sm">
-            {!isLogical && (
+            {!isLogical && !isFunction && (
               <>
                 <div className="flex items-center gap-2">
                   <span className="text-gray-500 dark:text-gray-400 font-mono text-xs">
                     Left:
                   </span>
                   <code className="px-2 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded">
-                    {String(condition.left)}
+                    {formatValue(condition.left)}
                   </code>
                 </div>
                 {condition.right !== undefined && (
@@ -145,13 +161,21 @@ export const PolicyViewer: React.FC<PolicyViewerProps> = ({
                       Right:
                     </span>
                     <code className="px-2 py-1 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded">
-                      {typeof condition.right === "object"
-                        ? JSON.stringify(condition.right)
-                        : String(condition.right)}
+                      {formatValue(condition.right)}
                     </code>
                   </div>
                 )}
               </>
+            )}
+            {isFunction && condition.args && (
+              <div className="flex items-center gap-2">
+                <span className="text-gray-500 dark:text-gray-400 font-mono text-xs">
+                  Args:
+                </span>
+                <code className="px-2 py-1 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded">
+                  {JSON.stringify(condition.args)}
+                </code>
+              </div>
             )}
           </div>
         </div>
@@ -161,7 +185,7 @@ export const PolicyViewer: React.FC<PolicyViewerProps> = ({
               <div key={idx}>
                 {idx > 0 && (
                   <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 my-2">
-                    {condition.type.toUpperCase()}
+                    {condition.operator?.toUpperCase()}
                   </div>
                 )}
                 {renderCondition(nested, level + 1)}
@@ -207,7 +231,7 @@ export const PolicyViewer: React.FC<PolicyViewerProps> = ({
         <CardHeader className="border-b border-gray-200 dark:border-gray-800">
           <div className="flex items-start justify-between">
             <div className="space-y-1">
-              <CardTitle className="text-2xl">{policy.policyId}</CardTitle>
+              <CardTitle className="text-2xl">{policy.id}</CardTitle>
               <CardDescription>{policy.description}</CardDescription>
             </div>
             <div className="flex items-center gap-2">
@@ -238,9 +262,9 @@ export const PolicyViewer: React.FC<PolicyViewerProps> = ({
               </p>
               <Badge
                 variant={
-                  policy.effect === "PERMIT"
+                  policy.effect === Effect.Permit
                     ? "success"
-                    : policy.effect === "DENY"
+                    : policy.effect === Effect.Deny
                       ? "error"
                       : "default"
                 }
@@ -250,29 +274,27 @@ export const PolicyViewer: React.FC<PolicyViewerProps> = ({
             </div>
             <div>
               <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
-                Status
+                Priority
               </p>
-              <Badge variant={policy.isActive ? "success" : "error"}>
-                {policy.isActive ? "Active" : "Inactive"}
-              </Badge>
+              <Badge variant="info">{policy.priority || 100}</Badge>
             </div>
             <div>
               <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
-                Category
+                Tags
               </p>
-              {policy.category && (
-                <Badge variant="default">{policy.category}</Badge>
+              {policy.metadata?.tags && policy.metadata.tags.length > 0 && (
+                <Badge variant="default">{policy.metadata.tags[0]}</Badge>
               )}
             </div>
           </div>
 
-          {policy.tags && policy.tags.length > 0 && (
+          {policy.metadata?.tags && policy.metadata.tags.length > 1 && (
             <div className="mb-6">
               <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-                Tags
+                All Tags
               </p>
               <div className="flex flex-wrap gap-2">
-                {policy.tags.map((tag) => (
+                {policy.metadata.tags.map((tag: string) => (
                   <Badge key={tag} variant="default">
                     {tag}
                   </Badge>
@@ -298,11 +320,11 @@ export const PolicyViewer: React.FC<PolicyViewerProps> = ({
 
             {showJson ? (
               <pre className="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-300 p-4 rounded-lg overflow-x-auto text-sm font-mono border border-gray-300 dark:border-gray-700">
-                {JSON.stringify(policy.conditions, null, 2)}
+                {JSON.stringify(policy.condition, null, 2)}
               </pre>
             ) : (
               <div className="space-y-2">
-                {renderCondition(policy.conditions)}
+                {renderCondition(policy.condition)}
               </div>
             )}
           </div>
@@ -311,14 +333,19 @@ export const PolicyViewer: React.FC<PolicyViewerProps> = ({
             <div>
               <p className="text-gray-500 dark:text-gray-400">Created</p>
               <p className="text-gray-900 dark:text-gray-100">
-                {formatDate(policy.createdAt)} by {policy.createdBy}
+                {policy.metadata?.createdAt &&
+                  formatDate(policy.metadata.createdAt)}
+                {policy.metadata?.createdBy &&
+                  ` by ${policy.metadata.createdBy}`}
               </p>
             </div>
             <div>
               <p className="text-gray-500 dark:text-gray-400">Updated</p>
               <p className="text-gray-900 dark:text-gray-100">
-                {formatDate(policy.updatedAt)}
-                {policy.updatedBy && ` by ${policy.updatedBy}`}
+                {policy.metadata?.modifiedAt &&
+                  formatDate(policy.metadata.modifiedAt)}
+                {policy.metadata?.modifiedBy &&
+                  ` by ${policy.metadata.modifiedBy}`}
               </p>
             </div>
           </div>

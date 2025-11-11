@@ -13,7 +13,7 @@ export default function AttributesPage() {
     type: ResourceType;
     id: string;
   }>({
-    type: "user",
+    type: "subject",
     id: "user-123",
   });
 
@@ -40,26 +40,63 @@ export default function AttributesPage() {
           <div className="flex flex-wrap gap-4 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-xl">
             <div className="flex-1 min-w-[200px]">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Resource Type
+                Attribute Context
               </label>
               <select
                 value={selectedResource.type}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const type = e.target.value as ResourceType;
+                  let defaultId = "";
+
+                  // Set contextual default IDs
+                  switch(type) {
+                    case "subject":
+                      defaultId = "user-123";
+                      break;
+                    case "resource":
+                      defaultId = "document-456";
+                      break;
+                    case "action":
+                      defaultId = "read-operation";
+                      break;
+                    case "environment":
+                      defaultId = "production";
+                      break;
+                    default:
+                      defaultId = `${type}-123`;
+                  }
+
                   setSelectedResource({
-                    ...selectedResource,
-                    type: e.target.value as ResourceType,
-                  })
-                }
+                    type,
+                    id: defaultId,
+                  });
+                }}
                 className="w-full px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="user">User</option>
-                <option value="document">Document</option>
-                <option value="organization">Organization</option>
+                <optgroup label="ABAC Context Types">
+                  <option value="subject">Subject (Who)</option>
+                  <option value="resource">Resource (What)</option>
+                  <option value="action">Action (How)</option>
+                  <option value="environment">Environment (When/Where)</option>
+                </optgroup>
+                <optgroup label="Domain-Specific Types">
+                  <option value="user">User</option>
+                  <option value="document">Document</option>
+                  <option value="company">Company</option>
+                  <option value="bond">Bond</option>
+                  <option value="claim">Claim</option>
+                  <option value="approval">Approval</option>
+                  <option value="tender">Tender</option>
+                </optgroup>
               </select>
             </div>
             <div className="flex-1 min-w-[200px]">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Resource ID
+                {selectedResource.type === "subject" && "Subject ID"}
+                {selectedResource.type === "resource" && "Resource ID"}
+                {selectedResource.type === "action" && "Action ID"}
+                {selectedResource.type === "environment" && "Environment ID"}
+                {!["subject", "resource", "action", "environment"].includes(selectedResource.type) && "Resource ID"}
               </label>
               <input
                 type="text"
@@ -91,17 +128,35 @@ export default function AttributesPage() {
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
             About Attributes
           </h3>
-          <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+          <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
             <p>
-              Attributes are key-value pairs that define characteristics of
-              resources, subjects, actions, and context in your ABAC system.
+              Attributes are key-value pairs that define characteristics in your ABAC system across different contexts.
             </p>
-            <p>
-              Use the resource selector above to view and manage attributes for
-              different resources in your system.
-            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+              <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-1">🧑 Subject Attributes</h4>
+                <p className="text-xs">Who is making the request? (e.g., user role, department, clearance level)</p>
+              </div>
+
+              <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-1">📄 Resource Attributes</h4>
+                <p className="text-xs">What is being accessed? (e.g., document type, classification, owner)</p>
+              </div>
+
+              <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-1">⚡ Action Attributes</h4>
+                <p className="text-xs">What operation is performed? (e.g., read, write, delete, approve)</p>
+              </div>
+
+              <div className="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-1">🌍 Environment Attributes</h4>
+                <p className="text-xs">Context of the request (e.g., time of day, location, IP address, device type)</p>
+              </div>
+            </div>
+
             <ul className="list-disc list-inside space-y-1 mt-3">
-              <li>Create new attributes to extend resource metadata</li>
+              <li>Create new attributes to extend metadata across all contexts</li>
               <li>Edit existing attributes to update values</li>
               <li>Delete unused attributes to keep your system clean</li>
               <li>Search and filter to quickly find specific attributes</li>

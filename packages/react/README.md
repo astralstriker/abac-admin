@@ -6,6 +6,12 @@
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/@devcraft-ts/abac-admin-react)](https://bundlephobia.com/package/@devcraft-ts/abac-admin-react)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## 🚀 Live Demo & Documentation
+
+**[View Live Demo →](https://abac-admin-02-nextjs-app-router.vercel.app/)**
+
+Explore a fully functional demo application showcasing all hooks and features, including complete documentation for **abac-engine** integration and best practices.
+
 ## Overview
 
 `@devcraft-ts/abac-admin-react` provides headless React hooks for managing ABAC (Attribute-Based Access Control) policies, attributes, and audit logs. Built on top of `@devcraft-ts/abac-admin-core`, these hooks give you full control over your UI while handling all the data fetching and state management logic.
@@ -19,6 +25,7 @@
 ✅ **Optional TanStack Query Support** - Use with or without external data fetching libraries
 ✅ **Comprehensive Hook Set** - Policy, Attribute, and Audit management
 ✅ **Optimistic Updates** - Built-in state management for smooth UX
+✅ **Built on abac-engine** - Leverages the official [abac-engine](https://www.npmjs.com/package/abac-engine) for policy evaluation
 
 ## Installation
 
@@ -39,16 +46,16 @@ pnpm add @devcraft-ts/abac-admin-react @devcraft-ts/abac-admin-core zod react
 ### 1. Wrap Your App with ABACProvider
 
 ```tsx
-import { ABACProvider } from '@devcraft-ts/abac-admin-react';
+import { ABACProvider } from "@devcraft-ts/abac-admin-react";
 
 function App() {
   return (
     <ABACProvider
       config={{
-        baseURL: '/api/abac',
+        baseURL: "/api/abac",
         headers: {
-          'Authorization': `Bearer ${yourAuthToken}`
-        }
+          Authorization: `Bearer ${yourAuthToken}`,
+        },
       }}
     >
       <YourApp />
@@ -60,7 +67,7 @@ function App() {
 ### 2. Use Hooks in Your Components
 
 ```tsx
-import { usePolicies } from '@devcraft-ts/abac-admin-react';
+import { usePolicies } from "@devcraft-ts/abac-admin-react";
 
 function PolicyList() {
   const {
@@ -69,7 +76,7 @@ function PolicyList() {
     error,
     createPolicy,
     deletePolicy,
-    activatePolicy
+    activatePolicy,
   } = usePolicies();
 
   if (isLoading) return <div>Loading policies...</div>;
@@ -78,16 +85,12 @@ function PolicyList() {
   return (
     <div>
       <h2>Policies ({policies.length})</h2>
-      {policies.map(policy => (
+      {policies.map((policy) => (
         <div key={policy.id}>
           <h3>{policy.policyId}</h3>
           <p>{policy.description}</p>
-          <button onClick={() => activatePolicy(policy.id)}>
-            Activate
-          </button>
-          <button onClick={() => deletePolicy(policy.id)}>
-            Delete
-          </button>
+          <button onClick={() => activatePolicy(policy.id)}>Activate</button>
+          <button onClick={() => deletePolicy(policy.id)}>Delete</button>
         </div>
       ))}
     </div>
@@ -110,6 +113,7 @@ Provides ABAC client instance to all child components.
 ```
 
 **Props:**
+
 - `config: ABACAdminConfig` - Client configuration
   - `baseURL: string` - API base URL (required)
   - `headers?: Record<string, string>` - Custom headers (optional)
@@ -149,38 +153,33 @@ const {
 
 ```tsx
 function PolicyManager() {
-  const {
-    policies,
-    createPolicy,
-    updatePolicy,
-    isLoading
-  } = usePolicies({
+  const { policies, createPolicy, updatePolicy, isLoading } = usePolicies({
     isActive: true,
-    category: 'document'
+    category: "document",
   });
 
   const handleCreate = async () => {
     await createPolicy({
-      policyId: 'new-policy',
-      version: '1.0.0',
-      effect: 'PERMIT',
-      description: 'Allow document access',
+      policyId: "new-policy",
+      version: "1.0.0",
+      effect: "PERMIT",
+      description: "Allow document access",
       conditions: {
-        type: 'equals',
-        left: { category: 'subject', key: 'role' },
-        right: 'admin'
+        type: "equals",
+        left: { category: "subject", key: "role" },
+        right: "admin",
       },
       isActive: true,
-      category: 'document',
-      tags: ['document', 'read'],
-      createdBy: 'user-123'
+      category: "document",
+      tags: ["document", "read"],
+      createdBy: "user-123",
     });
   };
 
   return (
     <div>
       <button onClick={handleCreate}>Create Policy</button>
-      {policies.map(p => (
+      {policies.map((p) => (
         <div key={p.id}>{p.policyId}</div>
       ))}
     </div>
@@ -194,10 +193,10 @@ Fetch a single policy by ID.
 
 ```tsx
 const {
-  policy,    // Policy | null - The policy
+  policy, // Policy | null - The policy
   isLoading, // boolean - Loading state
-  error,     // Error | null - Error state
-  refetch    // () => Promise<void> - Refetch policy
+  error, // Error | null - Error state
+  refetch, // () => Promise<void> - Refetch policy
 } = usePolicy(policyId);
 ```
 
@@ -215,7 +214,7 @@ function PolicyDetails({ policyId }: { policyId: string }) {
     <div>
       <h2>{policy.policyId}</h2>
       <p>{policy.description}</p>
-      <p>Status: {policy.isActive ? 'Active' : 'Inactive'}</p>
+      <p>Status: {policy.isActive ? "Active" : "Inactive"}</p>
       <p>Version: {policy.version}</p>
     </div>
   );
@@ -229,9 +228,9 @@ Test policy evaluation against a request.
 ```tsx
 const {
   testPolicy, // (request: PolicyTestRequest) => Promise<PolicyTestResult>
-  isLoading,  // boolean - Loading state
-  error,      // Error | null - Error state
-  result      // PolicyTestResult | null - Test result
+  isLoading, // boolean - Loading state
+  error, // Error | null - Error state
+  result, // PolicyTestResult | null - Test result
 } = usePolicyTest();
 ```
 
@@ -245,12 +244,12 @@ function PolicyTester({ policy }: { policy: Policy }) {
     const testResult = await testPolicy({
       policy,
       request: {
-        subject: { role: 'admin', department: 'engineering' },
-        action: { type: 'read' },
-        resource: { type: 'document', id: 'doc-123' }
-      }
+        subject: { role: "admin", department: "engineering" },
+        action: { type: "read" },
+        resource: { type: "document", id: "doc-123" },
+      },
     });
-    console.log('Decision:', testResult.decision);
+    console.log("Decision:", testResult.decision);
   };
 
   return (
@@ -275,10 +274,10 @@ Fetch all versions of a policy.
 
 ```tsx
 const {
-  versions,  // Policy[] - Array of policy versions
+  versions, // Policy[] - Array of policy versions
   isLoading, // boolean - Loading state
-  error,     // Error | null - Error state
-  refetch    // () => Promise<void> - Refetch versions
+  error, // Error | null - Error state
+  refetch, // () => Promise<void> - Refetch versions
 } = usePolicyVersions(policyId);
 ```
 
@@ -292,14 +291,14 @@ Manage resource attributes with full CRUD operations.
 
 ```tsx
 const {
-  attributes,           // Record<string, any> - All attributes for resource
-  isLoading,            // boolean - Loading state
-  error,                // Error | null - Error state
-  refetch,              // () => Promise<void> - Refetch attributes
-  setAttribute,         // (key: string, value: any) => Promise<AttributeValue>
-  deleteAttribute,      // (key: string) => Promise<void>
-  bulkSetAttributes,    // (attrs: Record<string, any>) => Promise<AttributeValue[]>
-  bulkDeleteAttributes  // (keys: string[]) => Promise<void>
+  attributes, // Record<string, any> - All attributes for resource
+  isLoading, // boolean - Loading state
+  error, // Error | null - Error state
+  refetch, // () => Promise<void> - Refetch attributes
+  setAttribute, // (key: string, value: any) => Promise<AttributeValue>
+  deleteAttribute, // (key: string) => Promise<void>
+  bulkSetAttributes, // (attrs: Record<string, any>) => Promise<AttributeValue[]>
+  bulkDeleteAttributes, // (keys: string[]) => Promise<void>
 } = useAttributes(resourceType, resourceId);
 ```
 
@@ -312,23 +311,26 @@ function UserAttributeManager({ userId }: { userId: string }) {
     setAttribute,
     deleteAttribute,
     bulkSetAttributes,
-    isLoading
-  } = useAttributes('user', userId);
+    isLoading,
+  } = useAttributes("user", userId);
 
-  const makeAdmin = () => setAttribute('role', 'admin');
+  const makeAdmin = () => setAttribute("role", "admin");
 
-  const updateMultiple = () => bulkSetAttributes({
-    role: 'senior-engineer',
-    department: 'engineering',
-    level: 5
-  });
+  const updateMultiple = () =>
+    bulkSetAttributes({
+      role: "senior-engineer",
+      department: "engineering",
+      level: 5,
+    });
 
   return (
     <div>
       <h3>User Attributes</h3>
       {Object.entries(attributes).map(([key, value]) => (
         <div key={key}>
-          <span>{key}: {JSON.stringify(value)}</span>
+          <span>
+            {key}: {JSON.stringify(value)}
+          </span>
           <button onClick={() => deleteAttribute(key)}>Delete</button>
         </div>
       ))}
@@ -345,10 +347,10 @@ Fetch a single attribute value.
 
 ```tsx
 const {
-  value,     // any - Attribute value
+  value, // any - Attribute value
   isLoading, // boolean - Loading state
-  error,     // Error | null - Error state
-  refetch    // () => Promise<void> - Refetch attribute
+  error, // Error | null - Error state
+  refetch, // () => Promise<void> - Refetch attribute
 } = useAttribute(resourceType, resourceId, key);
 ```
 
@@ -369,12 +371,12 @@ const {
 
 ```tsx
 function AttributeHistory({ userId }: { userId: string }) {
-  const { history, isLoading } = useAttributeHistory('user', userId, 'role');
+  const { history, isLoading } = useAttributeHistory("user", userId, "role");
 
   return (
     <div>
       <h3>Role Change History</h3>
-      {history.map(entry => (
+      {history.map((entry) => (
         <div key={entry.id}>
           {entry.value} at {new Date(entry.timestamp).toLocaleString()}
         </div>
@@ -391,9 +393,9 @@ Compare attributes between two resources.
 ```tsx
 const {
   comparison, // ComparisonResult - Comparison data
-  isLoading,  // boolean - Loading state
-  error,      // Error | null - Error state
-  refetch     // () => Promise<void> - Refetch comparison
+  isLoading, // boolean - Loading state
+  error, // Error | null - Error state
+  refetch, // () => Promise<void> - Refetch comparison
 } = useAttributeComparison(resourceType, resourceId1, resourceId2);
 ```
 
@@ -420,22 +422,17 @@ const {
 
 ```tsx
 function AuditLog() {
-  const {
-    entries,
-    total,
-    hasMore,
-    isLoading
-  } = useAuditLog({
-    entityType: 'policy',
-    action: 'UPDATE',
-    startDate: '2024-01-01T00:00:00Z',
-    limit: 50
+  const { entries, total, hasMore, isLoading } = useAuditLog({
+    entityType: "policy",
+    action: "UPDATE",
+    startDate: "2024-01-01T00:00:00Z",
+    limit: 50,
   });
 
   return (
     <div>
       <h2>Audit Log ({total} entries)</h2>
-      {entries.map(entry => (
+      {entries.map((entry) => (
         <div key={entry.id}>
           <strong>{entry.action}</strong> on {entry.entityType}
           <br />
@@ -515,10 +512,10 @@ function MyComponent() {
   useEffect(() => {
     if (error) {
       // Log to error tracking service
-      console.error('Policy fetch failed:', error);
+      console.error("Policy fetch failed:", error);
 
       // Show toast notification
-      showToast('Failed to load policies', 'error');
+      showToast("Failed to load policies", "error");
 
       // Retry after delay
       setTimeout(() => refetch(), 5000);
@@ -538,10 +535,12 @@ function App() {
   return (
     <ABACProvider
       config={{
-        baseURL: '/api/abac',
-        headers: authToken ? {
-          'Authorization': `Bearer ${authToken}`
-        } : {}
+        baseURL: "/api/abac",
+        headers: authToken
+          ? {
+              Authorization: `Bearer ${authToken}`,
+            }
+          : {},
       }}
     >
       <YourApp />
@@ -572,14 +571,12 @@ function QuickToggle({ policyId }: { policyId: string }) {
     } catch (error) {
       // Revert on error
       setIsActive(isActive);
-      console.error('Toggle failed:', error);
+      console.error("Toggle failed:", error);
     }
   };
 
   return (
-    <button onClick={toggle}>
-      {isActive ? 'Deactivate' : 'Activate'}
-    </button>
+    <button onClick={toggle}>{isActive ? "Deactivate" : "Activate"}</button>
   );
 }
 ```
@@ -589,19 +586,19 @@ function QuickToggle({ policyId }: { policyId: string }) {
 While not required, you can use these hooks alongside TanStack Query:
 
 ```tsx
-import { useQuery } from '@tanstack/react-query';
-import { useABACClient } from '@devcraft-ts/abac-admin-react';
-import { PolicyService } from '@devcraft-ts/abac-admin-core';
+import { useQuery } from "@tanstack/react-query";
+import { useABACClient } from "@devcraft-ts/abac-admin-react";
+import { PolicyService } from "@devcraft-ts/abac-admin-core";
 
 function PolicyListWithQuery() {
   const client = useABACClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['policies'],
+    queryKey: ["policies"],
     queryFn: async () => {
       const service = new PolicyService(client);
       return service.list();
-    }
+    },
   });
 
   return <div>{/* ... */}</div>;
@@ -623,8 +620,8 @@ import type {
   PolicyInput,
   PolicyUpdate,
   AttributeValue,
-  AuditLogEntry
-} from '@devcraft-ts/abac-admin-react';
+  AuditLogEntry,
+} from "@devcraft-ts/abac-admin-react";
 ```
 
 ---
@@ -681,12 +678,12 @@ function PolicyList() {
 // ✅ Good - Filter server-side
 const { policies } = usePolicies({
   isActive: true,
-  category: 'document'
+  category: "document",
 });
 
 // ❌ Bad - Filter client-side
 const { policies } = usePolicies();
-const activePolicies = policies.filter(p => p.isActive);
+const activePolicies = policies.filter((p) => p.isActive);
 ```
 
 ---
@@ -694,6 +691,7 @@ const activePolicies = policies.filter(p => p.isActive);
 ## Examples
 
 For complete working examples, see:
+
 - [Next.js Headless Example](../../examples/nextjs-headless)
 - [Custom UI Example](../../examples/custom-ui)
 - [With TanStack Query](../../examples/with-tanstack-query)

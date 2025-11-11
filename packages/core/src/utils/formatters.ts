@@ -1,6 +1,12 @@
+import type {
+  AttributeReference,
+  AttributeValue,
+  Condition,
+  ABACPolicy as Policy,
+  Effect as PolicyEffect,
+} from "abac-engine";
 import type { ResourceType } from "../schemas/attribute";
 import type { AuditAction, AuditLogEntry } from "../schemas/audit";
-import type { Condition, Policy, PolicyEffect } from "../schemas/policy";
 
 /**
  * Formats a date string to a human-readable format
@@ -62,7 +68,7 @@ export function formatRelativeTime(dateString: string): string {
  * Formats a policy effect to a display string
  */
 export function formatPolicyEffect(effect: PolicyEffect): string {
-  return effect === "PERMIT" ? "Allow" : "Deny";
+  return effect === "Permit" ? "Allow" : "Deny";
 }
 
 /**
@@ -107,42 +113,26 @@ export function formatConditionOperator(type: string): string {
  * Formats a condition to a human-readable string
  */
 export function formatCondition(condition: Condition, depth = 0): string {
+  // Simplified formatter for abac-engine Condition
+  // For complex formatting, use abac-engine's built-in utilities
   const indent = "  ".repeat(depth);
-
-  if (condition.type === "and" || condition.type === "or") {
-    const operator = condition.type.toUpperCase();
-    const nested =
-      condition.nested
-        ?.map((c: Condition) => formatCondition(c, depth + 1))
-        .join(`\n${indent}${operator} `) || "";
-    return `${indent}(${nested})`;
-  }
-
-  if (condition.type === "not") {
-    const nested = condition.nested?.[0]
-      ? formatCondition(condition.nested[0], depth + 1)
-      : "";
-    return `${indent}NOT ${nested}`;
-  }
-
-  const leftStr = formatConditionValue(condition.left);
-  const rightStr = formatConditionValue(condition.right);
-  const operator = formatConditionOperator(condition.type);
-
-  return `${indent}${leftStr} ${operator} ${rightStr}`;
+  return `${indent}${JSON.stringify(condition, null, 2)}`;
 }
 
 /**
  * Formats a condition value (handles attribute refs)
  */
-export function formatConditionValue(value: any): string {
+export function formatConditionValue(
+  value: AttributeReference | AttributeValue,
+): string {
   if (
     value &&
     typeof value === "object" &&
     "category" in value &&
-    "key" in value
+    "attributeId" in value
   ) {
-    return `${value.category}.${value.key}`;
+    const ref = value as AttributeReference;
+    return `${ref.category}.${ref.attributeId}${ref.path ? `.${ref.path}` : ""}`;
   }
 
   if (Array.isArray(value)) {
@@ -160,25 +150,9 @@ export function formatConditionValue(value: any): string {
  * Formats a condition to a compact single-line string
  */
 export function formatConditionCompact(condition: Condition): string {
-  if (condition.type === "and" || condition.type === "or") {
-    const operator = condition.type.toUpperCase();
-    const nested =
-      condition.nested?.map(formatConditionCompact).join(` ${operator} `) || "";
-    return `(${nested})`;
-  }
-
-  if (condition.type === "not") {
-    const nested = condition.nested?.[0]
-      ? formatConditionCompact(condition.nested[0])
-      : "";
-    return `NOT ${nested}`;
-  }
-
-  const leftStr = formatConditionValue(condition.left);
-  const rightStr = formatConditionValue(condition.right);
-  const operator = formatConditionOperator(condition.type);
-
-  return `${leftStr} ${operator} ${rightStr}`;
+  // Simplified formatter for abac-engine Condition
+  // For complex formatting, use abac-engine's built-in utilities
+  return JSON.stringify(condition);
 }
 
 /**
@@ -213,6 +187,12 @@ export function formatAuditMessage(entry: AuditLogEntry): string {
  */
 export function formatResourceType(resourceType: ResourceType): string {
   const typeMap: Record<ResourceType, string> = {
+    // ABAC context types
+    subject: "Subject",
+    resource: "Resource",
+    action: "Action",
+    environment: "Environment",
+    // Domain-specific resource types
     user: "User",
     company: "Company",
     bond: "Bond",
@@ -336,8 +316,8 @@ export function truncate(
  */
 export function formatPolicySummary(policy: Policy): string {
   const effect = formatPolicyEffect(policy.effect);
-  const status = policy.isActive ? "Active" : "Inactive";
-  return `${policy.policyId} v${policy.version} - ${effect} (${status})`;
+  const priority = policy.priority ? ` [Priority: ${policy.priority}]` : "";
+  return `${policy.id} v${policy.version} - ${effect}${priority}`;
 }
 
 /**

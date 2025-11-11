@@ -1,9 +1,5 @@
-import type {
-  Condition,
-  Policy,
-  PolicyInput,
-} from "@devcraft-ts/abac-admin-core";
 import { usePolicies, usePolicy } from "@devcraft-ts/abac-admin-react";
+import { Effect, type ABACPolicy, type Condition } from "abac-engine";
 import { Code2, Wand2 } from "lucide-react";
 import React from "react";
 import { Badge } from "../ui/Badge";
@@ -20,7 +16,7 @@ import { ConditionBuilder } from "./ConditionBuilder";
 
 export interface PolicyFormProps {
   policyId?: string;
-  onSuccess?: (policy: Policy) => void;
+  onSuccess?: (policy: ABACPolicy) => void;
   onCancel?: () => void;
 }
 
@@ -37,17 +33,18 @@ export const PolicyForm: React.FC<PolicyFormProps> = ({
   const [error, setError] = React.useState<string | null>(null);
   const [useVisualBuilder, setUseVisualBuilder] = React.useState(true);
 
-  const [formData, setFormData] = React.useState<Partial<PolicyInput>>({
-    policyId: "",
+  const [formData, setFormData] = React.useState<Partial<ABACPolicy>>({
+    id: "",
     version: "1.0.0",
-    effect: "PERMIT",
+    effect: Effect.Permit,
     description: "",
-    conditions: { type: "equals", left: "", right: "" },
-    isActive: true,
-    category: "",
-    tags: [],
-    createdBy: "user",
-    updatedBy: null,
+    condition: undefined,
+    priority: 100,
+    metadata: {
+      createdBy: "user",
+      createdAt: new Date(),
+      tags: [],
+    },
   });
 
   const [tagInput, setTagInput] = React.useState("");
@@ -56,18 +53,18 @@ export const PolicyForm: React.FC<PolicyFormProps> = ({
   React.useEffect(() => {
     if (policy && isEditMode) {
       setFormData({
-        policyId: policy.policyId,
+        id: policy.id,
         version: policy.version,
         effect: policy.effect,
         description: policy.description,
-        conditions: policy.conditions,
-        isActive: policy.isActive,
-        category: policy.category,
-        tags: policy.tags,
-        createdBy: policy.createdBy,
-        updatedBy: policy.updatedBy,
+        condition: policy.condition,
+        target: policy.target,
+        priority: policy.priority,
+        obligations: policy.obligations,
+        advice: policy.advice,
+        metadata: policy.metadata,
       });
-      setConditionJson(JSON.stringify(policy.conditions, null, 2));
+      setConditionJson(JSON.stringify(policy.condition, null, 2));
     }
   }, [policy, isEditMode]);
 
@@ -77,28 +74,32 @@ export const PolicyForm: React.FC<PolicyFormProps> = ({
     setIsSubmitting(true);
 
     try {
-      let conditions;
+      let condition;
       if (useVisualBuilder) {
-        conditions = formData.conditions;
+        condition = formData.condition;
       } else {
         try {
-          conditions = JSON.parse(conditionJson);
+          condition = JSON.parse(conditionJson);
         } catch (err) {
-          throw new Error("Invalid JSON in conditions field");
+          throw new Error("Invalid JSON in condition field");
         }
       }
 
-      const policyData: PolicyInput = {
-        policyId: formData.policyId || "",
+      const policyData: ABACPolicy = {
+        id: formData.id || "",
         version: formData.version || "1.0.0",
-        effect: formData.effect as "PERMIT" | "DENY",
-        description: formData.description || "",
-        conditions,
-        isActive: formData.isActive !== false,
-        category: formData.category || "",
-        tags: formData.tags || [],
-        createdBy: formData.createdBy || "user",
-        updatedBy: formData.updatedBy || null,
+        effect: formData.effect || Effect.Permit,
+        description: formData.description,
+        condition,
+        target: formData.target,
+        priority: formData.priority || 100,
+        obligations: formData.obligations,
+        advice: formData.advice,
+        metadata: {
+          ...formData.metadata,
+          createdBy: formData.metadata?.createdBy || "user",
+          createdAt: formData.metadata?.createdAt || new Date(),
+        },
       };
 
       if (isEditMode && policyId) {
@@ -117,10 +118,16 @@ export const PolicyForm: React.FC<PolicyFormProps> = ({
   };
 
   const handleAddTag = () => {
-    if (tagInput.trim() && !formData.tags?.includes(tagInput.trim())) {
+    if (
+      tagInput.trim() &&
+      !formData.metadata?.tags?.includes(tagInput.trim())
+    ) {
       setFormData({
         ...formData,
-        tags: [...(formData.tags || []), tagInput.trim()],
+        metadata: {
+          ...formData.metadata,
+          tags: [...(formData.metadata?.tags || []), tagInput.trim()],
+        },
       });
       setTagInput("");
     }
@@ -129,24 +136,28 @@ export const PolicyForm: React.FC<PolicyFormProps> = ({
   const handleRemoveTag = (tag: string) => {
     setFormData({
       ...formData,
-      tags: formData.tags?.filter((t) => t !== tag) || [],
+      metadata: {
+        ...formData.metadata,
+        tags: formData.metadata?.tags?.filter((t: string) => t !== tag) || [],
+      },
     });
   };
 
-  const handleConditionChange = (newCondition: Condition) => {
-    setFormData({ ...formData, conditions: newCondition });
+  const handleConditionChange = (newCondition: Condition | null) => {
+    if (!newCondition) return;
+    setFormData({ ...formData, condition: newCondition });
     setConditionJson(JSON.stringify(newCondition, null, 2));
   };
 
   const toggleBuilderMode = () => {
     if (useVisualBuilder) {
       // Switching to JSON mode
-      setConditionJson(JSON.stringify(formData.conditions, null, 2));
+      setConditionJson(JSON.stringify(formData.condition, null, 2));
     } else {
       // Switching to visual mode
       try {
         const parsed = JSON.parse(conditionJson);
-        setFormData({ ...formData, conditions: parsed });
+        setFormData({ ...formData, condition: parsed });
       } catch (e) {
         setError("Invalid JSON. Please fix before switching to visual mode.");
         return;
@@ -200,12 +211,17 @@ export const PolicyForm: React.FC<PolicyFormProps> = ({
                 </label>
                 <Input
                   placeholder="e.g., allow-read-documents"
-                  value={formData.policyId}
+                  value={formData.id || ""}
                   onChange={(e) =>
-                    setFormData({ ...formData, policyId: e.target.value })
+                    setFormData({ ...formData, id: e.target.value })
                   }
                   required
                   disabled={isEditMode}
+                  className={
+                    isEditMode
+                      ? "bg-gray-100 dark:bg-gray-800 cursor-not-allowed"
+                      : ""
+                  }
                 />
               </div>
 
@@ -222,55 +238,57 @@ export const PolicyForm: React.FC<PolicyFormProps> = ({
                   required
                 />
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Description <span className="text-red-500">*</span>
-              </label>
-              <Input
-                placeholder="Describe what this policy does"
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Effect <span className="text-red-500">*</span>
                 </label>
                 <select
-                  className="flex h-10 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
+                  className="flex h-10 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent shadow-sm"
                   value={formData.effect}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      effect: e.target.value as "PERMIT" | "DENY",
+                      effect: e.target.value as Effect,
                     })
                   }
                   required
                 >
-                  <option value="PERMIT">PERMIT</option>
-                  <option value="DENY">DENY</option>
+                  <option value={Effect.Permit}>Permit</option>
+                  <option value={Effect.Deny}>Deny</option>
                 </select>
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Category
+                  Priority
                 </label>
                 <Input
-                  placeholder="e.g., document, admin"
-                  value={formData.category}
+                  type="number"
+                  placeholder="e.g., 100"
+                  value={formData.priority || 100}
                   onChange={(e) =>
-                    setFormData({ ...formData, category: e.target.value })
+                    setFormData({
+                      ...formData,
+                      priority: parseInt(e.target.value) || 100,
+                    })
                   }
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Description
+              </label>
+              <textarea
+                className="flex min-h-[100px] w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent shadow-sm"
+                placeholder="Describe what this policy does..."
+                value={formData.description || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+              />
             </div>
 
             <div className="space-y-2">
@@ -279,33 +297,29 @@ export const PolicyForm: React.FC<PolicyFormProps> = ({
               </label>
               <div className="flex gap-2">
                 <Input
-                  placeholder="Add a tag"
+                  placeholder="Add a tag..."
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={(e) => {
+                  onKeyPress={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
                       handleAddTag();
                     }
                   }}
                 />
-                <Button
-                  type="button"
-                  onClick={handleAddTag}
-                  variant="secondary"
-                >
+                <Button type="button" variant="outline" onClick={handleAddTag}>
                   Add
                 </Button>
               </div>
-              {formData.tags && formData.tags.length > 0 && (
+              {formData.metadata?.tags && formData.metadata.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {formData.tags.map((tag) => (
+                  {formData.metadata.tags?.map((tag: string) => (
                     <Badge key={tag} variant="default">
                       {tag}
                       <button
                         type="button"
                         onClick={() => handleRemoveTag(tag)}
-                        className="ml-2 hover:text-red-600 dark:hover:text-red-400"
+                        className="ml-2 hover:text-red-600"
                       >
                         ×
                       </button>
@@ -313,24 +327,6 @@ export const PolicyForm: React.FC<PolicyFormProps> = ({
                   ))}
                 </div>
               )}
-            </div>
-
-            <div className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                id="isActive"
-                checked={formData.isActive}
-                onChange={(e) =>
-                  setFormData({ ...formData, isActive: e.target.checked })
-                }
-                className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:focus:ring-blue-400"
-              />
-              <label
-                htmlFor="isActive"
-                className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer"
-              >
-                Policy is active
-              </label>
             </div>
           </div>
 
@@ -353,49 +349,48 @@ export const PolicyForm: React.FC<PolicyFormProps> = ({
                   )
                 }
               >
-                {useVisualBuilder ? "Switch to JSON" : "Switch to Visual"}
+                {useVisualBuilder ? "Switch to JSON" : "Switch to Builder"}
               </Button>
             </div>
 
             {useVisualBuilder ? (
-              <div className="bg-gray-50 dark:bg-gray-900/50 p-4 rounded-lg border border-gray-300 dark:border-gray-800">
-                <ConditionBuilder
-                  condition={formData.conditions as Condition}
-                  onChange={handleConditionChange}
-                />
-              </div>
+              <ConditionBuilder
+                condition={formData.condition || null}
+                onChange={handleConditionChange}
+              />
             ) : (
               <div className="space-y-2">
                 <textarea
                   className="flex min-h-[300px] w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent shadow-sm"
-                  placeholder={`{\n  "type": "equals",\n  "left": "subject.role",\n  "right": "admin"\n}`}
+                  placeholder={`{\n  "operator": "equals",\n  "left": { "category": "subject", "attributeId": "role" },\n  "right": "admin"\n}`}
                   value={conditionJson}
                   onChange={(e) => setConditionJson(e.target.value)}
-                  required
                 />
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Define conditions in JSON format. Use types like: equals,
-                  notEquals, in, and, or, not.
-                </p>
               </div>
             )}
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-800">
+          <div className="flex items-center justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-800">
             {onCancel && (
-              <Button type="button" variant="outline" onClick={onCancel}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onCancel}
+                disabled={isSubmitting}
+              >
                 Cancel
               </Button>
             )}
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting
-                ? isEditMode
-                  ? "Updating..."
-                  : "Creating..."
-                : isEditMode
-                  ? "Update Policy"
-                  : "Create Policy"}
+              {isSubmitting ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  {isEditMode ? "Updating..." : "Creating..."}
+                </>
+              ) : (
+                <>{isEditMode ? "Update Policy" : "Create Policy"}</>
+              )}
             </Button>
           </div>
         </form>

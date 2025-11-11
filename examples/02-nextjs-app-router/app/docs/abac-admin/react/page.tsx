@@ -17,8 +17,34 @@ export default function ReactPackagePage() {
           @devcraft-ts/abac-admin-react
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-400">
-          Headless React hooks for building custom ABAC admin interfaces.
+          Headless React hooks for building custom ABAC admin interfaces. Built
+          on <strong>@devcraft-ts/abac-admin-core</strong> which leverages{" "}
+          <strong>abac-engine</strong> for policy evaluation.
         </p>
+      </div>
+
+      {/* abac-engine Integration */}
+      <div className="bg-blue-50 dark:bg-blue-950/30 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
+        <div className="flex items-start space-x-3">
+          <Package className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+              Built on abac-engine
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              These hooks provide a React-friendly interface to manage ABAC
+              policies powered by <strong>abac-engine</strong>. While the hooks
+              handle UI state and data fetching, abac-engine provides the
+              underlying policy evaluation logic.{" "}
+              <Link
+                href="/docs/abac-engine"
+                className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              >
+                Learn more →
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Features */}
@@ -48,7 +74,25 @@ export default function ReactPackagePage() {
               Type-Safe
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Full TypeScript support for better DX
+              Full TypeScript support with abac-engine types
+            </p>
+          </div>
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+            <Layers className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Lightweight
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              ~30KB minified - minimal overhead
+            </p>
+          </div>
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+            <Zap className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Optimistic Updates
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Built-in optimistic UI updates for smooth UX
             </p>
           </div>
         </div>
@@ -64,7 +108,7 @@ export default function ReactPackagePage() {
 
         <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
           <pre className="text-gray-300 font-mono text-sm">
-{`npm install @devcraft-ts/abac-admin-react
+            {`npm install @devcraft-ts/abac-admin-react
 
 # Peer dependencies
 npm install react react-dom`}
@@ -87,7 +131,7 @@ npm install react react-dom`}
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`import { ABACProvider } from '@devcraft-ts/abac-admin-react';
+                {`import { ABACProvider } from '@devcraft-ts/abac-admin-react';
 
 function App() {
   return (
@@ -113,7 +157,7 @@ function App() {
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`import { usePolicies } from '@devcraft-ts/abac-admin-react';
+                {`import { usePolicies } from '@devcraft-ts/abac-admin-react';
 
 function PolicyList() {
   const { policies, isLoading, error, refetch } = usePolicies();
@@ -153,11 +197,12 @@ function PolicyList() {
               usePolicies
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Hook for managing multiple policies with filtering and CRUD operations.
+              Hook for managing multiple policies with filtering and CRUD
+              operations.
             </p>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`const {
+                {`const {
   policies,        // Policy[]
   isLoading,       // boolean
   error,           // Error | null
@@ -227,7 +272,7 @@ function PolicyManager() {
             </p>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`const {
+                {`const {
   policy,       // Policy | null
   isLoading,    // boolean
   error,        // Error | null
@@ -269,7 +314,7 @@ function PolicyDetails({ policyId }: { policyId: string }) {
             </p>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`const {
+                {`const {
   testPolicy,  // (request: PolicyTestRequest) => Promise<PolicyTestResult>
   result,      // PolicyTestResult | null
   isLoading,   // boolean
@@ -323,7 +368,7 @@ function PolicyTester({ policyId }: { policyId: string }) {
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`const {
+                {`const {
   attributes,     // Record<string, any>
   isLoading,      // boolean
   error,          // Error | null
@@ -371,7 +416,7 @@ function UserAttributeManager({ userId }: { userId: string }) {
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`const {
+                {`const {
   history,    // AttributeValue[]
   isLoading,  // boolean
   error       // Error | null
@@ -414,7 +459,7 @@ function AttributeHistory({ userId }: { userId: string }) {
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`const {
+                {`const {
   entries,    // AuditLogEntry[]
   total,      // number
   hasMore,    // boolean
@@ -469,7 +514,8 @@ function AuditLog() {
               Use Context Provider at App Root
             </h3>
             <p className="text-sm text-green-800 dark:text-green-200">
-              Place the ABACProvider at the root of your app to ensure all components can access the hooks.
+              Place the ABACProvider at the root of your app to ensure all
+              components can access the hooks.
             </p>
           </div>
 
@@ -478,7 +524,8 @@ function AuditLog() {
               Handle Loading and Error States
             </h3>
             <p className="text-sm text-green-800 dark:text-green-200">
-              Always handle loading and error states in your UI for better user experience.
+              Always handle loading and error states in your UI for better user
+              experience.
             </p>
           </div>
 
@@ -487,7 +534,8 @@ function AuditLog() {
               Use Filters to Reduce Data
             </h3>
             <p className="text-sm text-green-800 dark:text-green-200">
-              Apply filters to hooks to fetch only the data you need, improving performance.
+              Apply filters to hooks to fetch only the data you need, improving
+              performance.
             </p>
           </div>
 

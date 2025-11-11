@@ -18,7 +18,33 @@ export default function NextjsPackagePage() {
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-400">
           Server-side utilities and API route helpers for Next.js applications.
+          Built on <strong>@devcraft-ts/abac-admin-core</strong> which leverages{" "}
+          <strong>abac-engine</strong> for policy evaluation.
         </p>
+      </div>
+
+      {/* abac-engine Integration */}
+      <div className="bg-blue-50 dark:bg-blue-950/30 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
+        <div className="flex items-start space-x-3">
+          <Package className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+              Built on abac-engine
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              This package provides Next.js-specific utilities for building ABAC
+              admin interfaces powered by <strong>abac-engine</strong>. It
+              includes pre-built API route handlers, authentication middleware,
+              and server utilities.{" "}
+              <Link
+                href="/docs/abac-engine"
+                className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              >
+                Learn more →
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Features */}
@@ -48,7 +74,25 @@ export default function NextjsPackagePage() {
               Type-Safe
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Full TypeScript support with Next.js types
+              Full TypeScript support with abac-engine types
+            </p>
+          </div>
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+            <Database className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Zero Config
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Works out of the box with sensible defaults
+            </p>
+          </div>
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+            <Code2 className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Automatic Validation
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Built-in Zod validation for all endpoints
             </p>
           </div>
         </div>
@@ -64,10 +108,14 @@ export default function NextjsPackagePage() {
 
         <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
           <pre className="text-gray-300 font-mono text-sm">
-{`npm install @devcraft-ts/abac-admin-nextjs
+            {`npm install @devcraft-ts/abac-admin-nextjs
+
+# Includes dependencies
+# - @devcraft-ts/abac-admin-core
+# - @devcraft-ts/abac-admin-react
 
 # Peer dependencies
-npm install next react react-dom`}
+npm install next react react-dom zod`}
           </pre>
         </div>
       </section>
@@ -90,13 +138,19 @@ npm install next react react-dom`}
             </p>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`// app/api/abac/policies/route.ts
-import { createPolicyRoutes } from '@devcraft-ts/abac-admin-nextjs';
-import { getABACClient } from '@/lib/abac-client';
+                {`// app/api/abac/policies/route.ts
+import { createPolicyRoutes } from '@devcraft-ts/abac-admin-nextjs/server';
+import { ABACAdminClient } from '@devcraft-ts/abac-admin-core';
 
-const { GET, POST } = createPolicyRoutes({
-  getClient: () => getABACClient()
+const getClient = () => new ABACAdminClient({
+  baseURL: process.env.ABAC_API_URL!,
+  headers: {
+    'Authorization': \`Bearer \${process.env.ABAC_API_TOKEN}\`
+  }
 });
+
+export const { GET, POST } = createPolicyRoutes(getClient);
+</parameter>
 
 export { GET, POST };
 
@@ -119,7 +173,7 @@ export { GET, PUT, DELETE };`}
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`"use client";
+                {`"use client";
 
 import { ABACProvider, usePolicies } from '@devcraft-ts/abac-admin-react';
 
@@ -169,7 +223,7 @@ export default function PoliciesPage() {
             </p>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`import { createPolicyRoutes } from '@devcraft-ts/abac-admin-nextjs';
+                {`import { createPolicyRoutes } from '@devcraft-ts/abac-admin-nextjs';
 
 const { GET, POST, PUT, DELETE, PATCH } = createPolicyRoutes({
   getClient: () => getABACClient(),
@@ -197,7 +251,7 @@ const { GET, POST, PUT, DELETE, PATCH } = createPolicyRoutes({
             </p>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`// app/api/abac/attributes/[type]/[id]/route.ts
+                {`// app/api/abac/attributes/[type]/[id]/route.ts
 import { createAttributeRoutes } from '@devcraft-ts/abac-admin-nextjs';
 
 const { GET, POST, DELETE } = createAttributeRoutes({
@@ -224,7 +278,7 @@ export { GET, POST, DELETE };
             </p>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`// app/api/abac/audit/route.ts
+                {`// app/api/abac/audit/route.ts
 import { createAuditRoutes } from '@devcraft-ts/abac-admin-nextjs';
 
 const { GET } = createAuditRoutes({
@@ -259,7 +313,7 @@ export { GET };
             </p>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`import { createAuthMiddleware } from '@devcraft-ts/abac-admin-nextjs';
+                {`import { createAuthMiddleware } from '@devcraft-ts/abac-admin-nextjs';
 import { getSession } from '@/lib/auth';
 
 const authMiddleware = createAuthMiddleware({
@@ -291,7 +345,7 @@ const { GET, POST } = createPolicyRoutes({
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`import {
+                {`import {
   requireRole,
   requirePermission,
   requireAny,
@@ -342,7 +396,7 @@ const authMiddleware = createAuthMiddleware({
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`app/
+                {`app/
 ├── api/
 │   └── abac/
 │       ├── policies/
@@ -372,7 +426,7 @@ const authMiddleware = createAuthMiddleware({
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`import { ABACAdminClient } from '@devcraft-ts/abac-admin-core';
+                {`import { ABACAdminClient } from '@devcraft-ts/abac-admin-core';
 
 export function getABACClient() {
   return new ABACAdminClient({
@@ -393,7 +447,7 @@ export function getABACClient() {
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`import { createAuthMiddleware } from '@devcraft-ts/abac-admin-nextjs';
+                {`import { createAuthMiddleware } from '@devcraft-ts/abac-admin-nextjs';
 import { getServerSession } from 'next-auth';
 
 export const authMiddleware = createAuthMiddleware({
@@ -421,7 +475,7 @@ export const authMiddleware = createAuthMiddleware({
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`import { createPolicyRoutes } from '@devcraft-ts/abac-admin-nextjs';
+                {`import { createPolicyRoutes } from '@devcraft-ts/abac-admin-nextjs';
 import { getABACClient } from '@/lib/abac-client';
 import { authMiddleware } from '@/lib/auth-middleware';
 
@@ -441,7 +495,7 @@ export { GET, POST };`}
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`"use client";
+                {`"use client";
 
 import { ABACProvider, usePolicies } from '@devcraft-ts/abac-admin-react';
 import { PolicyList } from '@devcraft-ts/abac-admin-react-ui';
@@ -481,7 +535,7 @@ export default function PoliciesPage() {
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`const { GET, POST } = createPolicyRoutes({
+                {`const { GET, POST } = createPolicyRoutes({
   getClient: async (request) => {
     // Get user token from request
     const token = request.headers.get('Authorization');
@@ -504,7 +558,7 @@ export default function PoliciesPage() {
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`const authMiddleware = createAuthMiddleware({
+                {`const authMiddleware = createAuthMiddleware({
   getUser: async (request) => getSession(request),
   isAuthorized: (user) => user?.role === 'admin',
   onUnauthorized: (context) => {
@@ -541,7 +595,8 @@ export default function PoliciesPage() {
               Use Environment Variables
             </h3>
             <p className="text-sm text-green-800 dark:text-green-200">
-              Store API URLs and tokens in environment variables, never hardcode them.
+              Store API URLs and tokens in environment variables, never hardcode
+              them.
             </p>
           </div>
 
@@ -550,7 +605,8 @@ export default function PoliciesPage() {
               Protect All Admin Routes
             </h3>
             <p className="text-sm text-green-800 dark:text-green-200">
-              Always use authentication middleware on API routes that manage policies and attributes.
+              Always use authentication middleware on API routes that manage
+              policies and attributes.
             </p>
           </div>
 
@@ -559,7 +615,8 @@ export default function PoliciesPage() {
               Use Proper RBAC
             </h3>
             <p className="text-sm text-green-800 dark:text-green-200">
-              Implement role-based access control to restrict who can create, update, or delete policies.
+              Implement role-based access control to restrict who can create,
+              update, or delete policies.
             </p>
           </div>
 
@@ -568,7 +625,8 @@ export default function PoliciesPage() {
               Handle Errors Gracefully
             </h3>
             <p className="text-sm text-green-800 dark:text-green-200">
-              Provide meaningful error messages and proper HTTP status codes in API responses.
+              Provide meaningful error messages and proper HTTP status codes in
+              API responses.
             </p>
           </div>
         </div>

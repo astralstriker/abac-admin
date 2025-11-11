@@ -1,11 +1,18 @@
-import { usePolicies } from '@devcraft-ts/abac-admin-react';
-import { Edit, Plus, Search, Trash2 } from 'lucide-react';
-import React from 'react';
-import { formatDate } from '../../lib/utils';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/Card';
-import { Input } from '../ui/Input';
+import { usePolicies } from "@devcraft-ts/abac-admin-react";
+import { Effect } from "abac-engine";
+import { Edit, Plus, Search, Trash2 } from "lucide-react";
+import React from "react";
+import { formatDate } from "../../lib/utils";
+import { Badge } from "../ui/Badge";
+import { Button } from "../ui/Button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/Card";
+import { Input } from "../ui/Input";
 
 export interface PolicyListProps {
   onEdit?: (policyId: string) => void;
@@ -21,7 +28,7 @@ export const PolicyList: React.FC<PolicyListProps> = ({
   onView,
 }) => {
   const { policies, isLoading, error, deletePolicy } = usePolicies();
-  const [searchTerm, setSearchTerm] = React.useState('');
+  const [searchTerm, setSearchTerm] = React.useState("");
 
   const filteredPolicies = React.useMemo(() => {
     if (!policies) return [];
@@ -30,19 +37,23 @@ export const PolicyList: React.FC<PolicyListProps> = ({
     const term = searchTerm.toLowerCase();
     return policies.filter(
       (policy) =>
-        policy.policyId.toLowerCase().includes(term) ||
+        policy.id.toLowerCase().includes(term) ||
         policy.description?.toLowerCase().includes(term) ||
-        policy.category?.toLowerCase().includes(term)
+        policy.metadata?.tags?.some((tag: string) =>
+          tag.toLowerCase().includes(term),
+        ),
     );
   }, [policies, searchTerm]);
 
   const handleDelete = async (policyId: string) => {
-    if (window.confirm(`Are you sure you want to delete policy "${policyId}"?`)) {
+    if (
+      window.confirm(`Are you sure you want to delete policy "${policyId}"?`)
+    ) {
       try {
         await deletePolicy(policyId);
         if (onDelete) onDelete(policyId);
       } catch (err) {
-        console.error('Failed to delete policy:', err);
+        console.error("Failed to delete policy:", err);
       }
     }
   };
@@ -96,7 +107,9 @@ export const PolicyList: React.FC<PolicyListProps> = ({
             {searchTerm ? (
               <p className="text-sm mt-1">Try adjusting your search terms</p>
             ) : (
-              <p className="text-sm mt-1">Create your first policy to get started</p>
+              <p className="text-sm mt-1">
+                Create your first policy to get started
+              </p>
             )}
           </div>
         ) : (
@@ -121,7 +134,7 @@ export const PolicyList: React.FC<PolicyListProps> = ({
                     onClick={() => onView && onView(policy.id)}
                   >
                     <td className="abac-table-cell">
-                      <div className="font-medium">{policy.policyId}</div>
+                      <div className="font-medium">{policy.id}</div>
                       {policy.description && (
                         <div className="text-sm text-muted-foreground mt-1">
                           {policy.description}
@@ -134,28 +147,30 @@ export const PolicyList: React.FC<PolicyListProps> = ({
                     <td className="abac-table-cell">
                       <Badge
                         variant={
-                          policy.effect === 'PERMIT'
-                            ? 'success'
-                            : policy.effect === 'DENY'
-                            ? 'error'
-                            : 'default'
+                          policy.effect === Effect.Permit
+                            ? "success"
+                            : policy.effect === Effect.Deny
+                              ? "error"
+                              : "default"
                         }
                       >
                         {policy.effect}
                       </Badge>
                     </td>
                     <td className="abac-table-cell">
-                      <Badge variant={policy.isActive ? 'success' : 'error'}>
-                        {policy.isActive ? 'Active' : 'Inactive'}
-                      </Badge>
+                      <Badge variant="success">Active</Badge>
                     </td>
                     <td className="abac-table-cell">
-                      {policy.category && (
-                        <Badge variant="default">{policy.category}</Badge>
-                      )}
+                      {policy.metadata?.tags &&
+                        policy.metadata.tags.length > 0 && (
+                          <Badge variant="default">
+                            {policy.metadata.tags[0]}
+                          </Badge>
+                        )}
                     </td>
                     <td className="abac-table-cell text-sm text-muted-foreground">
-                      {formatDate(policy.createdAt)}
+                      {policy.metadata?.createdAt &&
+                        formatDate(policy.metadata.createdAt)}
                     </td>
                     <td className="abac-table-cell">
                       <div

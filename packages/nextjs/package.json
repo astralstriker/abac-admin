@@ -55,6 +55,7 @@
   "scripts": {
     "build": "tsup src/index.ts src/server/index.ts --format esm,cjs --dts --external react,next,zod --minify",
     "dev": "tsup src/index.ts src/server/index.ts --format esm,cjs --dts --external react,next,zod --watch",
+    "test": "echo 'No tests for nextjs package yet'",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

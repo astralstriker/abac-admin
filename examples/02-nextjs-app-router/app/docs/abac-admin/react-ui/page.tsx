@@ -18,8 +18,33 @@ export default function ReactUIPackagePage() {
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-400">
           Pre-built UI components for ABAC Policy Administration - batteries
-          included.
+          included. Built on <strong>@devcraft-ts/abac-admin-react</strong>{" "}
+          which leverages <strong>abac-engine</strong> for policy evaluation.
         </p>
+      </div>
+
+      {/* abac-engine Integration */}
+      <div className="bg-blue-50 dark:bg-blue-950/30 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
+        <div className="flex items-start space-x-3">
+          <Package className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+              Built on abac-engine
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              These pre-built UI components provide a complete admin interface
+              for managing ABAC policies powered by <strong>abac-engine</strong>
+              . They use the same hooks and services as the headless React
+              package, with beautiful, accessible UI out of the box.{" "}
+              <Link
+                href="/docs/abac-engine"
+                className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              >
+                Learn more →
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Features */}
@@ -52,6 +77,24 @@ export default function ReactUIPackagePage() {
               Modern, accessible, and responsive design
             </p>
           </div>
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+            <Box className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Theme Support
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Full dark/light theme support included
+            </p>
+          </div>
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+            <Code2 className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Type-Safe
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Full TypeScript support with abac-engine types
+            </p>
+          </div>
         </div>
       </section>
 
@@ -63,10 +106,11 @@ export default function ReactUIPackagePage() {
               ✅ When to Use This Package
             </h3>
             <ul className="space-y-2 text-sm text-green-800 dark:text-green-200">
-              <li>• You want a ready-made admin UI</li>
+              <li>• You want a ready-made admin UI with theme support</li>
               <li>• You need to get up and running quickly</li>
               <li>• You&apos;re okay with an opinionated design</li>
               <li>• You want to prototype or build MVPs fast</li>
+              <li>• You need dark/light mode support</li>
             </ul>
           </div>
           <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-600 p-6 rounded-r-lg">
@@ -94,6 +138,12 @@ export default function ReactUIPackagePage() {
         <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
           <pre className="text-gray-300 font-mono text-sm">
             {`npm install @devcraft-ts/abac-admin-react-ui
+
+# Includes dependencies
+# - @devcraft-ts/abac-admin-core
+# - @devcraft-ts/abac-admin-react
+# - Radix UI components
+# - Tailwind CSS utilities
 
 # Peer dependencies
 npm install react react-dom`}

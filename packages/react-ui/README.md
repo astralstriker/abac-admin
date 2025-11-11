@@ -5,6 +5,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://badge.fury.io/js/@devcraft-ts%2Fabac-admin-react-ui.svg)](https://www.npmjs.com/package/@devcraft-ts/abac-admin-react-ui)
 
+## 🚀 Live Demo & Documentation
+
+**[View Live Demo →](https://abac-admin-02-nextjs-app-router.vercel.app/)**
+
+Explore a fully functional demo application showcasing all UI components with dark/light theme support, including complete documentation for **abac-engine** integration and best practices.
+
 ## 🎯 Overview
 
 `@devcraft-ts/abac-admin-react-ui` provides a complete set of pre-built, customizable UI components for managing ABAC policies. Built on top of Radix UI and styled with Tailwind CSS, these components offer a production-ready admin interface with full dark/light theme support.
@@ -15,6 +21,7 @@
 - ✅ You need to get up and running quickly
 - ✅ You're okay with an opinionated design
 - ✅ You need dark mode support out of the box
+- ✅ Built on [abac-engine](https://www.npmjs.com/package/abac-engine) for reliable policy evaluation
 
 **When NOT to use this package:**
 

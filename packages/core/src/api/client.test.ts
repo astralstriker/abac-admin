@@ -524,7 +524,7 @@ describe("ABACAdminClient", () => {
       await client.get("/test");
 
       expect(fetchMock).toHaveBeenCalledWith(
-        "https://api.example.com//test",
+        "https://api.example.com/test",
         expect.any(Object),
       );
     });

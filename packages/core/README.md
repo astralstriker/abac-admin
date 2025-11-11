@@ -6,6 +6,12 @@
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/@devcraft-ts/abac-admin-core)](https://bundlephobia.com/package/@devcraft-ts/abac-admin-core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## 🚀 Live Demo & Documentation
+
+**[View Live Demo →](https://abac-admin-02-nextjs-app-router.vercel.app/)**
+
+Explore a fully functional demo application showcasing all features, including complete documentation for **abac-engine** integration and best practices.
+
 ## Overview
 
 `@devcraft-ts/abac-admin-core` is a minimal, framework-agnostic package that provides the foundational building blocks for ABAC (Attribute-Based Access Control) policy administration. It includes:
@@ -24,6 +30,7 @@
 ✅ **Tree-Shakeable**: Import only what you need
 ✅ **Modern**: ES2020+, ESM and CJS support
 ✅ **Well-Tested**: Comprehensive test coverage
+✅ **Built on abac-engine**: Leverages the official [abac-engine](https://www.npmjs.com/package/abac-engine) for policy evaluation
 
 ## Installation
 
@@ -44,13 +51,13 @@ pnpm add @devcraft-ts/abac-admin-core zod
 ### Initialize the Client
 
 ```typescript
-import { ABACAdminClient, PolicyService } from '@devcraft-ts/abac-admin-core';
+import { ABACAdminClient, PolicyService } from "@devcraft-ts/abac-admin-core";
 
 const client = new ABACAdminClient({
-  baseURL: 'https://api.example.com/abac',
+  baseURL: "https://api.example.com/abac",
   headers: {
-    'Authorization': 'Bearer YOUR_TOKEN'
-  }
+    Authorization: "Bearer YOUR_TOKEN",
+  },
 });
 
 const policyService = new PolicyService(client);
@@ -63,139 +70,142 @@ const policyService = new PolicyService(client);
 const policies = await policyService.list();
 
 // Get a specific policy
-const policy = await policyService.get('policy-id');
+const policy = await policyService.get("policy-id");
 
 // Create a new policy
 const newPolicy = await policyService.create({
-  policyId: 'my-policy',
-  version: '1.0.0',
-  effect: 'PERMIT',
-  description: 'Allow users to view documents',
+  policyId: "my-policy",
+  version: "1.0.0",
+  effect: "PERMIT",
+  description: "Allow users to view documents",
   conditions: {
-    type: 'equals',
-    left: { category: 'action', key: 'type' },
-    right: 'view'
+    type: "equals",
+    left: { category: "action", key: "type" },
+    right: "view",
   },
   isActive: true,
-  category: 'document',
-  tags: ['document', 'read'],
-  createdBy: 'user-123'
+  category: "document",
+  tags: ["document", "read"],
+  createdBy: "user-123",
 });
 
 // Update a policy
-const updated = await policyService.update('policy-id', {
-  description: 'Updated description'
+const updated = await policyService.update("policy-id", {
+  description: "Updated description",
 });
 
 // Activate/Deactivate
-await policyService.activate('policy-id');
-await policyService.deactivate('policy-id');
+await policyService.activate("policy-id");
+await policyService.deactivate("policy-id");
 
 // Delete a policy
-await policyService.delete('policy-id');
+await policyService.delete("policy-id");
 ```
 
 ### Building Conditions
 
 ```typescript
-import { ConditionBuilder } from '@devcraft-ts/abac-admin-core';
+import { ConditionBuilder } from "@devcraft-ts/abac-admin-core";
 
 // Simple condition
 const condition1 = ConditionBuilder.equals(
-  ConditionBuilder.attr('subject', 'role'),
-  'admin'
+  ConditionBuilder.attr("subject", "role"),
+  "admin",
 );
 
 // Complex condition with AND/OR
 const condition2 = ConditionBuilder.and(
   ConditionBuilder.equals(
-    ConditionBuilder.attr('subject', 'department'),
-    'engineering'
+    ConditionBuilder.attr("subject", "department"),
+    "engineering",
   ),
   ConditionBuilder.or(
-    ConditionBuilder.in(
-      ConditionBuilder.attr('subject', 'role'),
-      ['admin', 'manager']
-    ),
-    ConditionBuilder.gte(
-      ConditionBuilder.attr('subject', 'level'),
-      5
-    )
-  )
+    ConditionBuilder.in(ConditionBuilder.attr("subject", "role"), [
+      "admin",
+      "manager",
+    ]),
+    ConditionBuilder.gte(ConditionBuilder.attr("subject", "level"), 5),
+  ),
 );
 
 // Use in policy
 const policy = await policyService.create({
-  policyId: 'complex-policy',
-  version: '1.0.0',
-  effect: 'PERMIT',
-  description: 'Complex access control',
+  policyId: "complex-policy",
+  version: "1.0.0",
+  effect: "PERMIT",
+  description: "Complex access control",
   conditions: condition2,
   isActive: true,
-  category: 'access',
-  tags: ['complex'],
-  createdBy: 'admin'
+  category: "access",
+  tags: ["complex"],
+  createdBy: "admin",
 });
 ```
 
 ### Working with Attributes
 
 ```typescript
-import { AttributeService } from '@devcraft-ts/abac-admin-core';
+import { AttributeService } from "@devcraft-ts/abac-admin-core";
 
 const attributeService = new AttributeService(client);
 
 // Get all attributes for a resource
-const attributes = await attributeService.getResourceAttributes('user', 'user-123');
+const attributes = await attributeService.getResourceAttributes(
+  "user",
+  "user-123",
+);
 
 // Set a single attribute
 await attributeService.setResourceAttribute(
-  'user',
-  'user-123',
-  'department',
-  'engineering'
+  "user",
+  "user-123",
+  "department",
+  "engineering",
 );
 
 // Bulk set attributes
-await attributeService.bulkSetAttributes('user', 'user-123', {
-  department: 'engineering',
-  role: 'senior-engineer',
-  level: 5
+await attributeService.bulkSetAttributes("user", "user-123", {
+  department: "engineering",
+  role: "senior-engineer",
+  level: 5,
 });
 
 // Get attribute history
-const history = await attributeService.getHistory('user', 'user-123', 'role');
+const history = await attributeService.getHistory("user", "user-123", "role");
 
 // Compare attributes between resources
 const comparison = await attributeService.compareAttributes(
-  'user',
-  'user-123',
-  'user-456'
+  "user",
+  "user-123",
+  "user-456",
 );
 ```
 
 ### Audit Logs
 
 ```typescript
-import { AuditService } from '@devcraft-ts/abac-admin-core';
+import { AuditService } from "@devcraft-ts/abac-admin-core";
 
 const auditService = new AuditService(client);
 
 // Get audit log with filters
 const auditLog = await auditService.getAuditLog({
-  entityType: 'policy',
-  action: 'UPDATE',
-  startDate: '2024-01-01T00:00:00Z',
-  limit: 50
+  entityType: "policy",
+  action: "UPDATE",
+  startDate: "2024-01-01T00:00:00Z",
+  limit: 50,
 });
 
 // Get entity history
-const policyHistory = await auditService.getEntityHistory('policy', 'policy-id');
+const policyHistory = await auditService.getEntityHistory(
+  "policy",
+  "policy-id",
+);
 
 // Get user activity
-const userActivity = await auditService.getUserActivity('user-123', {
-  startDate: '2024-01-01T00:00:00Z',
-  limit: 100
+const userActivity = await auditService.getUserActivity("user-123", {
+  startDate: "2024-01-01T00:00:00Z",
+  limit: 100,
 });
 
 // Get statistics
@@ -223,6 +233,7 @@ const client = new ABACAdminClient({
 Service for managing policies.
 
 **Methods:**
+
 - `list(filters?: PolicyFilters): Promise<Policy[]>`
 - `get(id: string): Promise<Policy>`
 - `create(policy: PolicyInput): Promise<Policy>`
@@ -245,6 +256,7 @@ Service for managing policies.
 Service for managing resource attributes.
 
 **Methods:**
+
 - `getResourceAttributes(resourceType: ResourceType, resourceId: string): Promise<Record<string, any>>`
 - `getResourceAttribute(resourceType: ResourceType, resourceId: string, key: string): Promise<any>`
 - `setResourceAttribute(resourceType: ResourceType, resourceId: string, key: string, value: any): Promise<AttributeValue>`
@@ -262,6 +274,7 @@ Service for managing resource attributes.
 Service for retrieving audit logs.
 
 **Methods:**
+
 - `getAuditLog(filters?: AuditLogFilter): Promise<AuditLogResponse>`
 - `getEntityHistory(entityType: 'policy' | 'attribute', entityId: string, limit?: number): Promise<AuditLogEntry[]>`
 - `getUserActivity(userId: string, options?: {...}): Promise<AuditLogResponse>`
@@ -276,26 +289,26 @@ Utility class for building policy conditions.
 
 ```typescript
 // Comparison operators
-ConditionBuilder.equals(left, right)
-ConditionBuilder.notEquals(left, right)
-ConditionBuilder.in(left, array)
-ConditionBuilder.notIn(left, array)
-ConditionBuilder.gte(left, right)
-ConditionBuilder.gt(left, right)
-ConditionBuilder.lte(left, right)
-ConditionBuilder.lt(left, right)
-ConditionBuilder.contains(left, right)
-ConditionBuilder.startsWith(left, right)
-ConditionBuilder.endsWith(left, right)
-ConditionBuilder.matches(left, pattern)
+ConditionBuilder.equals(left, right);
+ConditionBuilder.notEquals(left, right);
+ConditionBuilder.in(left, array);
+ConditionBuilder.notIn(left, array);
+ConditionBuilder.gte(left, right);
+ConditionBuilder.gt(left, right);
+ConditionBuilder.lte(left, right);
+ConditionBuilder.lt(left, right);
+ConditionBuilder.contains(left, right);
+ConditionBuilder.startsWith(left, right);
+ConditionBuilder.endsWith(left, right);
+ConditionBuilder.matches(left, pattern);
 
 // Logical operators
-ConditionBuilder.and(...conditions)
-ConditionBuilder.or(...conditions)
-ConditionBuilder.not(condition)
+ConditionBuilder.and(...conditions);
+ConditionBuilder.or(...conditions);
+ConditionBuilder.not(condition);
 
 // Helper
-ConditionBuilder.attr(category, key)  // Create attribute reference
+ConditionBuilder.attr(category, key); // Create attribute reference
 ```
 
 ### Validators
@@ -374,8 +387,8 @@ import type {
   PolicyTestRequest,
   PolicyTestResult,
   AuditLogResponse,
-  AuditStatistics
-} from '@devcraft-ts/abac-admin-core';
+  AuditStatistics,
+} from "@devcraft-ts/abac-admin-core";
 ```
 
 ## Error Handling
@@ -384,10 +397,10 @@ The client throws standard JavaScript errors. Wrap calls in try-catch:
 
 ```typescript
 try {
-  const policy = await policyService.get('policy-id');
+  const policy = await policyService.get("policy-id");
 } catch (error) {
   if (error instanceof Error) {
-    console.error('API Error:', error.message);
+    console.error("API Error:", error.message);
   }
 }
 ```
@@ -396,11 +409,11 @@ Use the optional error handler for global error handling:
 
 ```typescript
 const client = new ABACAdminClient({
-  baseURL: 'https://api.example.com',
+  baseURL: "https://api.example.com",
   onError: (error) => {
-    console.error('ABAC API Error:', error);
+    console.error("ABAC API Error:", error);
     // Send to error tracking service
-  }
+  },
 });
 ```
 
@@ -412,9 +425,9 @@ const client = new ABACAdminClient({
 const client = new ABACAdminClient({
   baseURL: process.env.ABAC_API_URL,
   headers: {
-    'Authorization': `Bearer ${getToken()}`,
-    'X-Tenant-ID': getTenantId()
-  }
+    Authorization: `Bearer ${getToken()}`,
+    "X-Tenant-ID": getTenantId(),
+  },
 });
 ```
 
@@ -422,8 +435,8 @@ const client = new ABACAdminClient({
 
 ```typescript
 const client = new ABACAdminClient({
-  baseURL: 'https://api.example.com',
-  timeout: 60000  // 60 seconds
+  baseURL: "https://api.example.com",
+  timeout: 60000, // 60 seconds
 });
 ```
 
@@ -432,7 +445,7 @@ const client = new ABACAdminClient({
 ```typescript
 const auditLog = await auditService.getAuditLog({
   limit: 100,
-  offset: 0
+  offset: 0,
 });
 
 console.log(`Showing ${auditLog.entries.length} of ${auditLog.total} entries`);
@@ -448,6 +461,10 @@ This core package is framework-agnostic. For framework-specific integrations:
 - **Vue**: Use `@devcraft-ts/abac-admin-vue` (composables) - Coming soon
 - **Angular**: Use `@devcraft-ts/abac-admin-angular` (services) - Coming soon
 
+## Related Projects
+
+This package is built on top of **[abac-engine](https://www.npmjs.com/package/abac-engine)** - the official ABAC policy evaluation engine. For complete documentation on abac-engine integration, policy best practices, and examples, visit the [live demo](https://abac-admin-02-nextjs-app-router.vercel.app/).
+
 ## Contributing
 
 Contributions are welcome! Please read our [Contributing Guide](../../CONTRIBUTING.md) for details.
@@ -458,9 +475,10 @@ MIT © [astralstriker]
 
 ## Support
 
-- [Documentation](https://abac-admin.dev)
+- [Live Demo & Documentation](https://abac-admin-02-nextjs-app-router.vercel.app/)
+- [abac-engine Documentation](https://abac-admin-02-nextjs-app-router.vercel.app/)
 - [GitHub Issues](https://github.com/astralstriker/abac-admin/issues)
-- [Discord Community](https://discord.gg/abac-admin)
+- [npm Package](https://www.npmjs.com/package/@devcraft-ts/abac-admin-core)
 
 ---
 

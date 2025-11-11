@@ -65,7 +65,7 @@ export function useAuditLog(filters?: AuditLogFilter): UseAuditLogResult {
 
   // Use ref to store filters and compare stringified values to prevent infinite loops
   const filtersRef = useRef<string>();
-  const currentFiltersString = JSON.stringify(filters);
+  const currentFiltersString = JSON.stringify(filters || {});
 
   const fetchAuditLog = useCallback(async () => {
     setIsLoading(true);
@@ -233,7 +233,7 @@ export function useUserActivity(
 
   // Use ref to store options and compare stringified values to prevent infinite loops
   const optionsRef = useRef<string>();
-  const currentOptionsString = JSON.stringify(options);
+  const currentOptionsString = JSON.stringify(options || {});
 
   const fetchUserActivity = useCallback(async () => {
     if (!userId) {

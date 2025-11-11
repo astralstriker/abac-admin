@@ -18,7 +18,32 @@ export default function CorePackagePage() {
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-400">
           Lightweight, framework-agnostic core for ABAC Policy Administration.
+          Built on top of <strong>abac-engine</strong> with full TypeScript
+          support.
         </p>
+      </div>
+
+      {/* abac-engine Integration */}
+      <div className="bg-blue-50 dark:bg-blue-950/30 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
+        <div className="flex items-start space-x-3">
+          <Package className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+              Built on abac-engine
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              This package uses official <strong>abac-engine</strong> types,
+              schemas, and utilities. The core provides the management layer for
+              policies, while abac-engine handles evaluation.{" "}
+              <Link
+                href="/docs/abac-engine"
+                className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              >
+                Learn more →
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Features */}
@@ -48,7 +73,16 @@ export default function CorePackagePage() {
               Type-Safe
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Full TypeScript support with Zod validation
+              Full TypeScript support with Zod validation and abac-engine types
+            </p>
+          </div>
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+            <Database className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              abac-engine Integration
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Uses official abac-engine schemas and evaluation logic
             </p>
           </div>
         </div>
@@ -64,7 +98,7 @@ export default function CorePackagePage() {
 
         <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
           <pre className="text-gray-300 font-mono text-sm">
-{`npm install @devcraft-ts/abac-admin-core zod
+            {`npm install @devcraft-ts/abac-admin-core zod
 
 # or
 yarn add @devcraft-ts/abac-admin-core zod
@@ -90,7 +124,7 @@ pnpm add @devcraft-ts/abac-admin-core zod`}
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`import { ABACAdminClient, PolicyService } from '@devcraft-ts/abac-admin-core';
+                {`import { ABACAdminClient, PolicyService } from '@devcraft-ts/abac-admin-core';
 
 const client = new ABACAdminClient({
   baseURL: 'https://api.example.com/abac',
@@ -110,7 +144,7 @@ const policyService = new PolicyService(client);`}
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-sm">
-{`// List all policies
+                {`// List all policies
 const policies = await policyService.list();
 
 // Get a specific policy
@@ -164,7 +198,7 @@ await policyService.delete('policy-id');`}
         <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 space-y-4">
           <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
             <pre className="text-gray-300 font-mono text-sm">
-{`const client = new ABACAdminClient({
+              {`const client = new ABACAdminClient({
   baseURL: string;           // Required: API base URL
   headers?: Record<string, string>;  // Optional: Custom headers
   timeout?: number;          // Optional: Request timeout (default: 30000ms)
@@ -234,7 +268,8 @@ await policyService.delete('policy-id');`}
             </div>
             <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
               <code className="text-sm font-mono text-gray-900 dark:text-white">
-                test(request: PolicyTestRequest): Promise&lt;PolicyTestResult&gt;
+                test(request: PolicyTestRequest):
+                Promise&lt;PolicyTestResult&gt;
               </code>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                 Test a policy against sample data
@@ -258,7 +293,7 @@ await policyService.delete('policy-id');`}
         <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 space-y-4">
           <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
             <pre className="text-gray-300 font-mono text-sm">
-{`import { AttributeService } from '@devcraft-ts/abac-admin-core';
+              {`import { AttributeService } from '@devcraft-ts/abac-admin-core';
 
 const attributeService = new AttributeService(client);
 
@@ -315,7 +350,7 @@ const comparison = await attributeService.compareAttributes(
         <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 space-y-4">
           <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
             <pre className="text-gray-300 font-mono text-sm">
-{`import { AuditService } from '@devcraft-ts/abac-admin-core';
+              {`import { AuditService } from '@devcraft-ts/abac-admin-core';
 
 const auditService = new AuditService(client);
 
@@ -360,7 +395,7 @@ const stats = await auditService.getStatistics();`}
         <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 space-y-4">
           <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
             <pre className="text-gray-300 font-mono text-sm">
-{`import { ConditionBuilder } from '@devcraft-ts/abac-admin-core';
+              {`import { ConditionBuilder } from '@devcraft-ts/abac-admin-core';
 
 // Simple condition
 const condition1 = ConditionBuilder.equals(
@@ -411,7 +446,7 @@ const condition2 = ConditionBuilder.and(
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-xs">
-{`import {
+                {`import {
   validatePolicyId,
   validateVersion,
   validatePolicyStructure,
@@ -440,7 +475,7 @@ if (!result.valid) {
             </h3>
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
               <pre className="text-gray-300 font-mono text-xs">
-{`import {
+                {`import {
   formatDate,
   formatRelativeTime,
   formatPolicyEffect,
@@ -478,7 +513,7 @@ formatCondition(condition);`}
         <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 space-y-4">
           <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
             <pre className="text-gray-300 font-mono text-sm">
-{`// Wrap API calls in try-catch
+              {`// Wrap API calls in try-catch
 try {
   const policy = await policyService.get('policy-id');
 } catch (error) {
@@ -511,7 +546,7 @@ const client = new ABACAdminClient({
         <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 space-y-4">
           <div className="bg-gray-900 rounded-lg p-4 border border-gray-800 overflow-x-auto">
             <pre className="text-gray-300 font-mono text-sm">
-{`import type {
+              {`import type {
   // Policy types
   Policy,
   PolicyInput,

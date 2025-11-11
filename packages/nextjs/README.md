@@ -6,6 +6,12 @@
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/@devcraft-ts/abac-admin-nextjs)](https://bundlephobia.com/package/@devcraft-ts/abac-admin-nextjs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## 🚀 Live Demo & Documentation
+
+**[View Live Demo →](https://abac-admin-02-nextjs-app-router.vercel.app/)**
+
+Explore a fully functional Next.js demo application showcasing all features, including complete documentation for **abac-engine** integration and best practices.
+
 ## Overview
 
 `@devcraft-ts/abac-admin-nextjs` provides everything you need to build a complete ABAC policy administration interface in Next.js. It combines server-side API route helpers with client-side React hooks for a seamless full-stack experience.
@@ -19,6 +25,7 @@
 ✅ **Automatic Validation** - Built-in Zod validation for all endpoints
 ✅ **React Hooks Included** - Re-exports all hooks from `@devcraft-ts/abac-admin-react`
 ✅ **Zero Config** - Works out of the box with sensible defaults
+✅ **Built on abac-engine** - Leverages the official [abac-engine](https://www.npmjs.com/package/abac-engine) for policy evaluation
 
 ## Installation
 
@@ -42,22 +49,23 @@ pnpm add @devcraft-ts/abac-admin-nextjs @devcraft-ts/abac-admin-core @devcraft-t
 
 ```ts
 // app/api/abac/policies/route.ts
-import { createPolicyRoutes } from '@devcraft-ts/abac-admin-nextjs/server';
-import { ABACAdminClient } from '@devcraft-ts/abac-admin-core';
+import { createPolicyRoutes } from "@devcraft-ts/abac-admin-nextjs/server";
+import { ABACAdminClient } from "@devcraft-ts/abac-admin-core";
 
-const getClient = () => new ABACAdminClient({
-  baseURL: process.env.ABAC_API_URL!,
-  headers: {
-    'Authorization': `Bearer ${process.env.ABAC_API_TOKEN}`
-  }
-});
+const getClient = () =>
+  new ABACAdminClient({
+    baseURL: process.env.ABAC_API_URL!,
+    headers: {
+      Authorization: `Bearer ${process.env.ABAC_API_TOKEN}`,
+    },
+  });
 
 export const { GET, POST } = createPolicyRoutes(getClient);
 ```
 
 ```ts
 // app/api/abac/policies/[id]/route.ts
-import { createPolicyRoutes } from '@devcraft-ts/abac-admin-nextjs/server';
+import { createPolicyRoutes } from "@devcraft-ts/abac-admin-nextjs/server";
 
 export const { PUT, DELETE } = createPolicyRoutes(getClient);
 ```
@@ -66,7 +74,7 @@ export const { PUT, DELETE } = createPolicyRoutes(getClient);
 
 ```ts
 // app/api/abac/attributes/[resourceType]/[resourceId]/route.ts
-import { createAttributeRoutes } from '@devcraft-ts/abac-admin-nextjs/server';
+import { createAttributeRoutes } from "@devcraft-ts/abac-admin-nextjs/server";
 
 export const { GET, POST } = createAttributeRoutes(getClient);
 ```
@@ -75,7 +83,7 @@ export const { GET, POST } = createAttributeRoutes(getClient);
 
 ```ts
 // app/api/abac/audit/route.ts
-import { createAuditRoutes } from '@devcraft-ts/abac-admin-nextjs/server';
+import { createAuditRoutes } from "@devcraft-ts/abac-admin-nextjs/server";
 
 export const { GET } = createAuditRoutes(getClient);
 ```
@@ -84,9 +92,9 @@ export const { GET } = createAuditRoutes(getClient);
 
 ```tsx
 // app/admin/policies/page.tsx
-'use client';
+"use client";
 
-import { ABACProvider, usePolicies } from '@devcraft-ts/abac-admin-nextjs';
+import { ABACProvider, usePolicies } from "@devcraft-ts/abac-admin-nextjs";
 
 function PolicyList() {
   const { policies, isLoading, createPolicy, deletePolicy } = usePolicies();
@@ -95,7 +103,7 @@ function PolicyList() {
 
   return (
     <div>
-      {policies.map(policy => (
+      {policies.map((policy) => (
         <div key={policy.id}>
           <h3>{policy.policyId}</h3>
           <button onClick={() => deletePolicy(policy.id)}>Delete</button>
@@ -107,7 +115,7 @@ function PolicyList() {
 
 export default function PoliciesPage() {
   return (
-    <ABACProvider config={{ baseURL: '/api/abac' }}>
+    <ABACProvider config={{ baseURL: "/api/abac" }}>
       <PolicyList />
     </ABACProvider>
   );
@@ -125,8 +133,8 @@ import {
   createPolicyRoutes,
   createAttributeRoutes,
   createAuditRoutes,
-  createAuthMiddleware
-} from '@devcraft-ts/abac-admin-nextjs/server';
+  createAuthMiddleware,
+} from "@devcraft-ts/abac-admin-nextjs/server";
 ```
 
 #### createPolicyRoutes
@@ -134,9 +142,10 @@ import {
 Creates Next.js route handlers for policy management.
 
 ```ts
-const getClient = () => new ABACAdminClient({
-  baseURL: process.env.ABAC_API_URL!
-});
+const getClient = () =>
+  new ABACAdminClient({
+    baseURL: process.env.ABAC_API_URL!,
+  });
 
 export const { GET, POST, PUT, DELETE, PATCH } = createPolicyRoutes(getClient);
 ```
@@ -216,25 +225,25 @@ export const { GET } = createAuditRoutes(getClient);
 Creates authentication middleware for protecting routes.
 
 ```ts
-import { createAuthMiddleware } from '@devcraft-ts/abac-admin-nextjs/server';
-import { cookies } from 'next/headers';
+import { createAuthMiddleware } from "@devcraft-ts/abac-admin-nextjs/server";
+import { cookies } from "next/headers";
 
 const authMiddleware = createAuthMiddleware({
   getAuthContext: async (request) => {
-    const token = cookies().get('session')?.value;
+    const token = cookies().get("session")?.value;
     if (!token) return null;
 
     const session = await verifyToken(token);
     return {
       userId: session.userId,
       roles: session.roles,
-      permissions: session.permissions
+      permissions: session.permissions,
     };
   },
   authorize: async (context, request) => {
     // Check if user has admin role
-    return context.roles?.includes('admin') ?? false;
-  }
+    return context.roles?.includes("admin") ?? false;
+  },
 });
 
 // Use in route handlers
@@ -265,49 +274,61 @@ import {
   combineAuthAnd,
   combineAuthOr,
   createRequestLogger,
-  createRateLimiter
-} from '@devcraft-ts/abac-admin-nextjs/server';
+  createRateLimiter,
+} from "@devcraft-ts/abac-admin-nextjs/server";
 
 // Require specific roles
 const authMiddleware = createAuthMiddleware({
-  getAuthContext: async (request) => { /* ... */ },
-  authorize: requireRoles(['admin', 'manager'])
+  getAuthContext: async (request) => {
+    /* ... */
+  },
+  authorize: requireRoles(["admin", "manager"]),
 });
 
 // Require specific permissions
 const authMiddleware = createAuthMiddleware({
-  getAuthContext: async (request) => { /* ... */ },
-  authorize: requirePermissions(['policies:read', 'policies:write'])
+  getAuthContext: async (request) => {
+    /* ... */
+  },
+  authorize: requirePermissions(["policies:read", "policies:write"]),
 });
 
 // Combine multiple requirements (AND)
 const authMiddleware = createAuthMiddleware({
-  getAuthContext: async (request) => { /* ... */ },
+  getAuthContext: async (request) => {
+    /* ... */
+  },
   authorize: combineAuthAnd([
-    requireRoles(['admin']),
-    requirePermissions(['policies:write'])
-  ])
+    requireRoles(["admin"]),
+    requirePermissions(["policies:write"]),
+  ]),
 });
 
 // Combine multiple requirements (OR)
 const authMiddleware = createAuthMiddleware({
-  getAuthContext: async (request) => { /* ... */ },
+  getAuthContext: async (request) => {
+    /* ... */
+  },
   authorize: combineAuthOr([
-    requireRoles(['admin']),
-    requireRoles(['manager'])
-  ])
+    requireRoles(["admin"]),
+    requireRoles(["manager"]),
+  ]),
 });
 
 // Add request logging
 const authMiddleware = createAuthMiddleware({
-  getAuthContext: async (request) => { /* ... */ },
-  onRequest: createRequestLogger(false) // true to include body
+  getAuthContext: async (request) => {
+    /* ... */
+  },
+  onRequest: createRequestLogger(false), // true to include body
 });
 
 // Add rate limiting (simple in-memory)
 const authMiddleware = createAuthMiddleware({
-  getAuthContext: async (request) => { /* ... */ },
-  authorize: createRateLimiter(100, 60000) // 100 requests per minute
+  getAuthContext: async (request) => {
+    /* ... */
+  },
+  authorize: createRateLimiter(100, 60000), // 100 requests per minute
 });
 ```
 
@@ -323,8 +344,8 @@ import {
   usePolicies,
   usePolicy,
   useAttributes,
-  useAuditLog
-} from '@devcraft-ts/abac-admin-nextjs';
+  useAuditLog,
+} from "@devcraft-ts/abac-admin-nextjs";
 ```
 
 For complete hook documentation, see [@devcraft-ts/abac-admin-react README](../react/README.md).
@@ -367,14 +388,14 @@ app/
 ### lib/abac-client.ts
 
 ```ts
-import { ABACAdminClient } from '@devcraft-ts/abac-admin-core';
+import { ABACAdminClient } from "@devcraft-ts/abac-admin-core";
 
 export function getABACClient() {
   return new ABACAdminClient({
     baseURL: process.env.ABAC_API_URL!,
     headers: {
-      'Authorization': `Bearer ${process.env.ABAC_API_TOKEN}`
-    }
+      Authorization: `Bearer ${process.env.ABAC_API_TOKEN}`,
+    },
   });
 }
 ```
@@ -382,12 +403,15 @@ export function getABACClient() {
 ### lib/auth-middleware.ts
 
 ```ts
-import { createAuthMiddleware, requireRoles } from '@devcraft-ts/abac-admin-nextjs/server';
-import { cookies } from 'next/headers';
+import {
+  createAuthMiddleware,
+  requireRoles,
+} from "@devcraft-ts/abac-admin-nextjs/server";
+import { cookies } from "next/headers";
 
 export const authMiddleware = createAuthMiddleware({
   getAuthContext: async (request) => {
-    const session = cookies().get('session')?.value;
+    const session = cookies().get("session")?.value;
     if (!session) return null;
 
     // Verify session and return user context
@@ -395,10 +419,10 @@ export const authMiddleware = createAuthMiddleware({
     return {
       userId: user.id,
       roles: user.roles,
-      permissions: user.permissions
+      permissions: user.permissions,
     };
   },
-  authorize: requireRoles(['admin', 'policy-manager'])
+  authorize: requireRoles(["admin", "policy-manager"]),
 });
 ```
 
@@ -418,17 +442,17 @@ export { GET: authMiddleware(GET), POST: authMiddleware(POST) };
 ### app/admin/layout.tsx
 
 ```tsx
-'use client';
+"use client";
 
-import { ABACProvider } from '@devcraft-ts/abac-admin-nextjs';
+import { ABACProvider } from "@devcraft-ts/abac-admin-nextjs";
 
 export default function AdminLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <ABACProvider config={{ baseURL: '/api/abac' }}>
+    <ABACProvider config={{ baseURL: "/api/abac" }}>
       <div className="admin-layout">
         <nav>{/* Navigation */}</nav>
         <main>{children}</main>
@@ -441,9 +465,9 @@ export default function AdminLayout({
 ### app/admin/policies/page.tsx
 
 ```tsx
-'use client';
+"use client";
 
-import { usePolicies } from '@devcraft-ts/abac-admin-nextjs';
+import { usePolicies } from "@devcraft-ts/abac-admin-nextjs";
 
 export default function PoliciesPage() {
   const {
@@ -452,7 +476,7 @@ export default function PoliciesPage() {
     error,
     createPolicy,
     deletePolicy,
-    activatePolicy
+    activatePolicy,
   } = usePolicies();
 
   if (isLoading) return <div>Loading policies...</div>;
@@ -462,7 +486,7 @@ export default function PoliciesPage() {
     <div>
       <h1>Policies ({policies.length})</h1>
       <div className="policy-list">
-        {policies.map(policy => (
+        {policies.map((policy) => (
           <div key={policy.id} className="policy-card">
             <h3>{policy.policyId}</h3>
             <p>{policy.description}</p>
@@ -470,9 +494,7 @@ export default function PoliciesPage() {
               <button onClick={() => activatePolicy(policy.id)}>
                 Activate
               </button>
-              <button onClick={() => deletePolicy(policy.id)}>
-                Delete
-              </button>
+              <button onClick={() => deletePolicy(policy.id)}>Delete</button>
             </div>
           </div>
         ))}
@@ -490,16 +512,18 @@ export default function PoliciesPage() {
 
 ```ts
 // app/api/abac/policies/route.ts
-import { cookies } from 'next/headers';
+import { cookies } from "next/headers";
 
 const getClient = () => {
-  const token = cookies().get('auth-token')?.value;
+  const token = cookies().get("auth-token")?.value;
 
   return new ABACAdminClient({
     baseURL: process.env.ABAC_API_URL!,
-    headers: token ? {
-      'Authorization': `Bearer ${token}`
-    } : {}
+    headers: token
+      ? {
+          Authorization: `Bearer ${token}`,
+        }
+      : {},
   });
 };
 
@@ -510,19 +534,21 @@ export const { GET, POST } = createPolicyRoutes(getClient);
 
 ```ts
 const authMiddleware = createAuthMiddleware({
-  getAuthContext: async (request) => { /* ... */ },
+  getAuthContext: async (request) => {
+    /* ... */
+  },
   onUnauthorized: (request) => {
     return NextResponse.json(
-      { error: 'Please log in to access this resource' },
-      { status: 401 }
+      { error: "Please log in to access this resource" },
+      { status: 401 },
     );
   },
   onForbidden: (context, request) => {
     return NextResponse.json(
       { error: `User ${context.userId} does not have permission` },
-      { status: 403 }
+      { status: 403 },
     );
-  }
+  },
 });
 ```
 
@@ -530,15 +556,17 @@ const authMiddleware = createAuthMiddleware({
 
 ```ts
 const authMiddleware = createAuthMiddleware({
-  getAuthContext: async (request) => { /* ... */ },
+  getAuthContext: async (request) => {
+    /* ... */
+  },
   onRequest: (context, request) => {
     console.log({
       timestamp: new Date().toISOString(),
-      userId: context?.userId ?? 'anonymous',
+      userId: context?.userId ?? "anonymous",
       method: request.method,
-      url: request.url
+      url: request.url,
     });
-  }
+  },
 });
 ```
 
@@ -546,15 +574,17 @@ const authMiddleware = createAuthMiddleware({
 
 ```ts
 // Different clients for different routes
-const adminClient = () => new ABACAdminClient({
-  baseURL: process.env.ADMIN_API_URL!,
-  headers: { 'X-Role': 'admin' }
-});
+const adminClient = () =>
+  new ABACAdminClient({
+    baseURL: process.env.ADMIN_API_URL!,
+    headers: { "X-Role": "admin" },
+  });
 
-const userClient = () => new ABACAdminClient({
-  baseURL: process.env.USER_API_URL!,
-  headers: { 'X-Role': 'user' }
-});
+const userClient = () =>
+  new ABACAdminClient({
+    baseURL: process.env.USER_API_URL!,
+    headers: { "X-Role": "user" },
+  });
 
 // app/api/admin/policies/route.ts
 export const { GET, POST } = createPolicyRoutes(adminClient);
@@ -578,8 +608,8 @@ import type {
   MiddlewareConfig,
   UsePoliciesResult,
   Policy,
-  PolicyInput
-} from '@devcraft-ts/abac-admin-nextjs';
+  PolicyInput,
+} from "@devcraft-ts/abac-admin-nextjs";
 ```
 
 ---
@@ -605,11 +635,13 @@ export const POST = authMiddleware(basePOST);
 
 ```ts
 const authMiddleware = createAuthMiddleware({
-  getAuthContext: async (request) => { /* ... */ },
+  getAuthContext: async (request) => {
+    /* ... */
+  },
   authorize: combineAuthAnd([
-    requireRoles(['admin']),
-    requirePermissions(['policies:write'])
-  ])
+    requireRoles(["admin"]),
+    requirePermissions(["policies:write"]),
+  ]),
 });
 ```
 
@@ -637,6 +669,7 @@ function MyComponent() {
 ## Examples
 
 For complete working examples, see:
+
 - [Next.js Headless Example](../../examples/nextjs-headless)
 - [Next.js with Authentication](../../examples/nextjs-auth)
 - [Next.js Full-Stack Admin](../../examples/nextjs-fullstack)

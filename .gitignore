@@ -71,3 +71,11 @@ out/
 
 # Development documentation (not for npm/GitHub releases)
 docs/dev/
+
+# Publishing scripts and internal documentation
+publish.sh
+PUBLISHING.md
+PUBLISH_CHECKLIST.md
+
+# npm pack tarballs
+*.tgz

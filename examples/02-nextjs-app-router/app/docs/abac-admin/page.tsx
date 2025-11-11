@@ -17,8 +17,38 @@ export default function AbacAdminPage() {
           @devcraft-ts/abac-admin
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-400">
-          Lightweight, modular packages for managing ABAC policies across multiple platforms. Build policy administration UIs with ease.
+          Lightweight, modular packages for managing ABAC policies across
+          multiple platforms. Built on top of <strong>abac-engine</strong>, the
+          official ABAC policy evaluation engine.
         </p>
+      </div>
+
+      {/* abac-engine Integration Notice */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
+        <div className="flex items-start space-x-3">
+          <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1" />
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+              Built on abac-engine
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+              All @devcraft-ts/abac-admin packages are built on top of{" "}
+              <strong>abac-engine</strong>, providing standards-compliant ABAC
+              policy evaluation with support for complex conditions,
+              obligations, and advice.
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              These packages provide the UI and management layer, while
+              abac-engine handles the policy evaluation logic.{" "}
+              <Link
+                href="/docs/abac-engine"
+                className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              >
+                Learn more about abac-engine →
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Key Principles */}
@@ -65,7 +95,8 @@ export default function AbacAdminPage() {
                   Layered Architecture
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  Each package builds on top of the previous, giving you flexibility to choose your level of abstraction.
+                  Each package builds on top of the previous, giving you
+                  flexibility to choose your level of abstraction.
                 </p>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -154,7 +185,8 @@ export default function AbacAdminPage() {
               <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              Framework-agnostic core with API client, services, types, and utilities.
+              Framework-agnostic core with API client, services, types, and
+              utilities. Uses abac-engine types and schemas.
             </p>
             <div className="flex flex-wrap gap-2">
               <span className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded">
@@ -286,7 +318,7 @@ export default function AbacAdminPage() {
         </h2>
         <div className="bg-gray-900 rounded-xl p-6 border border-gray-800 overflow-x-auto">
           <pre className="text-gray-300 font-mono text-sm">
-{`// Install
+            {`// Install
 npm install @devcraft-ts/abac-admin-react
 
 // Use
@@ -328,7 +360,8 @@ function PolicyManager() {
               Policy Administration UI
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Build complete policy management interfaces for administrators to create, edit, and manage ABAC policies.
+              Build complete policy management interfaces for administrators to
+              create, edit, and manage ABAC policies.
             </p>
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
@@ -336,7 +369,8 @@ function PolicyManager() {
               Attribute Management
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Manage resource attributes and user permissions through intuitive interfaces.
+              Manage resource attributes and user permissions through intuitive
+              interfaces.
             </p>
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
@@ -344,7 +378,8 @@ function PolicyManager() {
               Audit & Compliance
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              View audit logs and track policy changes for compliance and security monitoring.
+              View audit logs and track policy changes for compliance and
+              security monitoring.
             </p>
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-200 dark:border-gray-800">
@@ -352,7 +387,8 @@ function PolicyManager() {
               Policy Testing
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Test policies in sandbox environments before deploying to production.
+              Test policies in sandbox environments before deploying to
+              production.
             </p>
           </div>
         </div>
@@ -364,7 +400,9 @@ function PolicyManager() {
           Ready to Build Policy Management UIs?
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
-          Start with our Quick Start guide or dive into individual package documentation.
+          Start with our Quick Start guide or dive into individual package
+          documentation. All packages leverage <strong>abac-engine</strong> for
+          reliable, standards-compliant ABAC policy evaluation.
         </p>
         <div className="flex flex-wrap gap-4">
           <Link
@@ -375,10 +413,10 @@ function PolicyManager() {
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
-            href="/docs/installation"
+            href="/docs/abac-engine"
             className="inline-flex items-center space-x-2 px-6 py-3 bg-white dark:bg-gray-900 border-2 border-purple-300 dark:border-purple-700 text-purple-600 dark:text-purple-400 rounded-lg font-medium hover:bg-purple-50 dark:hover:bg-purple-950/30 transition-colors"
           >
-            <span>Installation Guide</span>
+            <span>abac-engine Docs</span>
           </Link>
         </div>
       </div>

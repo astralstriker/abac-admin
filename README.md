@@ -4,6 +4,19 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## 🚀 Live Demo & Documentation
+
+**[View Live Demo →](https://abac-admin-02-nextjs-app-router.vercel.app/)**
+
+Experience the ABAC Admin UI in action with a fully functional demo application. The demo includes:
+
+- Complete policy management interface
+- Interactive policy editor with real-time validation
+- Attribute management and resource configuration
+- Audit log viewer with filtering
+- Policy testing and evaluation tools
+- Best practices examples and documentation for **abac-engine** integration
+
 ## 🎯 Overview
 
 The ABAC Admin UI packages provide a complete solution for managing ABAC policies in your application. Built with a **minimal footprint architecture**, you install only what you need:
@@ -22,6 +35,7 @@ The ABAC Admin UI packages provide a complete solution for managing ABAC policie
 ✅ **Tree-Shakeable** - Import only what you use
 ✅ **Zero Lock-in** - Use our UI or build your own
 ✅ **Modern** - ES2020+, ESM and CJS support
+✅ **Built on abac-engine** - Leverages the official [abac-engine](https://www.npmjs.com/package/abac-engine) for policy evaluation
 
 ## 🚀 Quick Start
 
@@ -191,11 +205,13 @@ npm install @devcraft-ts/abac-admin-react-ui
 
 ## 📚 Documentation
 
+- **[Live Demo & Documentation](https://abac-admin-02-nextjs-app-router.vercel.app/)** - Interactive demo with complete documentation
 - **[Getting Started](./GETTING_STARTED.md)** - Quick start guide
 - **[Architecture Guide](./ABAC_ENGINE_UI.md)** - Detailed architecture
 - **[API Reference](./docs/api-reference.md)** - Complete API docs
 - **[Examples](./examples)** - Working examples
 - **[Integration Guides](./docs/integration-guides/)** - Platform-specific guides
+- **[abac-engine Documentation](https://abac-admin-02-nextjs-app-router.vercel.app/)** - Official abac-engine docs and best practices
 
 ## 🎨 Usage Patterns
 
@@ -338,10 +354,13 @@ MIT © [astralstriker](https://github.com/astralstriker)
 
 ## 🔗 Links
 
+- **Live Demo**: https://abac-admin-02-nextjs-app-router.vercel.app/
 - **GitHub**: https://github.com/astralstriker/abac-admin
 - **npm**: https://www.npmjs.com/~astralstriker
 - **Issues**: https://github.com/astralstriker/abac-admin/issues
+- **abac-engine**: https://www.npmjs.com/package/abac-engine
 
 ---
 
 **Lightweight, modular ABAC policy management for modern applications.**
+**Built on [abac-engine](https://www.npmjs.com/package/abac-engine) - the official ABAC evaluation engine.**

@@ -109,25 +109,42 @@ export function createPolicyRoutes(
   getClient: () => ABACAdminClient,
 ): PolicyRouteHandlers {
   const PolicyInputSchema = z.object({
-    policyId: z.string().min(1),
+    id: z.string().min(1),
     version: z.string().min(1),
-    effect: z.enum(["PERMIT", "DENY"]),
+    effect: z.enum(["Permit", "Deny"]),
     description: z.string().optional(),
-    conditions: z.any(),
-    isActive: z.boolean().default(true),
-    category: z.string().optional(),
-    tags: z.array(z.string()).optional(),
-    createdBy: z.string().min(1),
+    condition: z.any().optional(),
+    target: z.any().optional(),
+    priority: z.number().optional(),
+    obligations: z.array(z.any()).optional(),
+    advice: z.array(z.any()).optional(),
+    metadata: z
+      .object({
+        createdBy: z.string().optional(),
+        createdAt: z.date().optional(),
+        modifiedBy: z.string().optional(),
+        modifiedAt: z.date().optional(),
+        tags: z.array(z.string()).optional(),
+      })
+      .optional(),
   });
 
   const PolicyUpdateSchema = z.object({
     version: z.string().optional(),
-    effect: z.enum(["PERMIT", "DENY"]).optional(),
+    effect: z.enum(["Permit", "Deny"]).optional(),
     description: z.string().optional(),
-    conditions: z.any().optional(),
-    isActive: z.boolean().optional(),
-    category: z.string().optional(),
-    tags: z.array(z.string()).optional(),
+    condition: z.any().optional(),
+    target: z.any().optional(),
+    priority: z.number().optional(),
+    obligations: z.array(z.any()).optional(),
+    advice: z.array(z.any()).optional(),
+    metadata: z
+      .object({
+        modifiedBy: z.string().optional(),
+        modifiedAt: z.date().optional(),
+        tags: z.array(z.string()).optional(),
+      })
+      .optional(),
   });
 
   return {

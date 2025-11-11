@@ -1,21 +1,27 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const ResourceTypeSchema = z.enum([
-  'user',
-  'company',
-  'bond',
-  'claim',
-  'approval',
-  'document',
-  'tender'
+  // ABAC context types
+  "subject",
+  "resource",
+  "action",
+  "environment",
+  // Domain-specific resource types
+  "user",
+  "company",
+  "bond",
+  "claim",
+  "approval",
+  "document",
+  "tender",
 ]);
 
 export const AttributeValueTypeSchema = z.enum([
-  'string',
-  'number',
-  'boolean',
-  'array',
-  'object'
+  "string",
+  "number",
+  "boolean",
+  "array",
+  "object",
 ]);
 
 export const AttributeValueSchema = z.object({
@@ -26,7 +32,7 @@ export const AttributeValueSchema = z.object({
   attributeValue: z.any(),
   valueType: AttributeValueTypeSchema,
   updatedBy: z.string(),
-  updatedAt: z.string().datetime()
+  updatedAt: z.string().datetime(),
 });
 
 export const AttributeDefinitionSchema = z.object({
@@ -37,12 +43,12 @@ export const AttributeDefinitionSchema = z.object({
   resourceTypes: z.array(ResourceTypeSchema),
   isComputed: z.boolean(),
   computeFunction: z.string().optional(),
-  validationRules: z.record(z.any()).optional()
+  validationRules: z.record(z.any()).optional(),
 });
 
 export const AttributeInputSchema = AttributeValueSchema.omit({
   id: true,
-  updatedAt: true
+  updatedAt: true,
 });
 
 export const BulkAttributeInputSchema = z.record(z.any());

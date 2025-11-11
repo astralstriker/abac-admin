@@ -31,7 +31,6 @@ export type {
 // Re-export types from core
 export type {
   Condition,
-  ConditionType,
   Policy,
   PolicyEffect,
   PolicyInput,

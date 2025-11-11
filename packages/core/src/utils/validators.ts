@@ -1,5 +1,5 @@
-import type { AttributeValue } from '../schemas/attribute';
-import type { Condition, Policy, PolicyInput } from '../schemas/policy';
+import { validatePolicy } from "abac-engine";
+import type { AttributeValue } from "../schemas/attribute";
 
 /**
  * Validates a policy ID format
@@ -20,127 +20,28 @@ export function validateVersion(version: string): boolean {
 }
 
 /**
- * Validates that a policy has all required fields
+ * Validates a policy structure using abac-engine's validator
+ *
+ * Note: Use validatePolicy from abac-engine for complete validation
  */
-export function validatePolicyStructure(policy: Partial<Policy>): {
+export function validatePolicyStructure(policy: any): {
   valid: boolean;
   errors: string[];
 } {
-  const errors: string[] = [];
-
-  if (!policy.policyId) {
-    errors.push('policyId is required');
-  } else if (!validatePolicyId(policy.policyId)) {
-    errors.push('policyId must be alphanumeric with hyphens/underscores, 3-100 characters');
+  try {
+    const result = validatePolicy(policy);
+    return {
+      valid: result.valid,
+      errors: result.errors?.map((e) => e.message) || [],
+    };
+  } catch (error) {
+    return {
+      valid: false,
+      errors: [
+        error instanceof Error ? error.message : "Invalid policy structure",
+      ],
+    };
   }
-
-  if (!policy.version) {
-    errors.push('version is required');
-  } else if (!validateVersion(policy.version)) {
-    errors.push('version must follow semantic versioning (e.g., 1.0.0)');
-  }
-
-  if (!policy.effect) {
-    errors.push('effect is required');
-  } else if (policy.effect !== 'PERMIT' && policy.effect !== 'DENY') {
-    errors.push('effect must be either PERMIT or DENY');
-  }
-
-  if (!policy.description || policy.description.trim() === '') {
-    errors.push('description is required');
-  }
-
-  if (!policy.conditions) {
-    errors.push('conditions are required');
-  }
-
-  if (!policy.category) {
-    errors.push('category is required');
-  }
-
-  if (!Array.isArray(policy.tags)) {
-    errors.push('tags must be an array');
-  }
-
-  return {
-    valid: errors.length === 0,
-    errors
-  };
-}
-
-/**
- * Validates a condition structure recursively
- */
-export function validateConditionStructure(condition: Condition): {
-  valid: boolean;
-  errors: string[];
-} {
-  const errors: string[] = [];
-
-  if (!condition || typeof condition !== 'object') {
-    errors.push('Condition must be an object');
-    return { valid: false, errors };
-  }
-
-  if (!condition.type) {
-    errors.push('Condition type is required');
-    return { valid: false, errors };
-  }
-
-  const logicalOps = ['and', 'or', 'not'];
-  const comparisonOps = [
-    'equals',
-    'notEquals',
-    'in',
-    'notIn',
-    'gte',
-    'gt',
-    'lte',
-    'lt',
-    'contains',
-    'startsWith',
-    'endsWith',
-    'matches'
-  ];
-
-  const validOps = [...logicalOps, ...comparisonOps];
-  if (!validOps.includes(condition.type)) {
-    errors.push(`Invalid condition type: ${condition.type}`);
-  }
-
-  if (logicalOps.includes(condition.type)) {
-    if (!condition.nested || !Array.isArray(condition.nested)) {
-      errors.push(`Logical operator ${condition.type} requires nested array`);
-    } else if (condition.nested.length === 0) {
-      errors.push(`Logical operator ${condition.type} requires at least one nested condition`);
-    } else {
-      condition.nested.forEach((nested: Condition, index: number) => {
-        const result = validateConditionStructure(nested);
-        if (!result.valid) {
-          result.errors.forEach(err => {
-            errors.push(`Nested condition ${index}: ${err}`);
-          });
-        }
-      });
-    }
-  } else if (comparisonOps.includes(condition.type)) {
-    if (condition.left === undefined) {
-      errors.push(`Comparison operator ${condition.type} requires left operand`);
-    }
-    if (condition.right === undefined) {
-      errors.push(`Comparison operator ${condition.type} requires right operand`);
-    }
-
-    // Validate 'in' and 'notIn' have array as right operand
-    if ((condition.type === 'in' || condition.type === 'notIn') && !Array.isArray(condition.right)) {
-      errors.push(`Operator ${condition.type} requires right operand to be an array`);
-    }
-  }
-
-  return {
-    valid: errors.length === 0,
-    errors
-  };
 }
 
 /**
@@ -156,8 +57,9 @@ export function validateAttributeKey(key: string): boolean {
  * Validates a resource ID format
  */
 export function validateResourceId(resourceId: string): boolean {
-  // Resource ID should not be empty and be reasonable length
-  return resourceId.length > 0 && resourceId.length <= 255;
+  // Resource ID should be alphanumeric with hyphens/underscores, 3-200 chars
+  const regex = /^[a-zA-Z0-9_-]{3,200}$/;
+  return regex.test(resourceId);
 }
 
 /**
@@ -165,39 +67,39 @@ export function validateResourceId(resourceId: string): boolean {
  */
 export function validateAttributeValue(
   value: any,
-  expectedType: 'string' | 'number' | 'boolean' | 'array' | 'object'
+  expectedType: "string" | "number" | "boolean" | "array" | "object",
 ): {
   valid: boolean;
   error?: string;
 } {
   switch (expectedType) {
-    case 'string':
-      if (typeof value !== 'string') {
-        return { valid: false, error: 'Value must be a string' };
+    case "string":
+      if (typeof value !== "string") {
+        return { valid: false, error: "Value must be a string" };
       }
       break;
 
-    case 'number':
-      if (typeof value !== 'number' || isNaN(value)) {
-        return { valid: false, error: 'Value must be a valid number' };
+    case "number":
+      if (typeof value !== "number" || isNaN(value)) {
+        return { valid: false, error: "Value must be a valid number" };
       }
       break;
 
-    case 'boolean':
-      if (typeof value !== 'boolean') {
-        return { valid: false, error: 'Value must be a boolean' };
+    case "boolean":
+      if (typeof value !== "boolean") {
+        return { valid: false, error: "Value must be a boolean" };
       }
       break;
 
-    case 'array':
+    case "array":
       if (!Array.isArray(value)) {
-        return { valid: false, error: 'Value must be an array' };
+        return { valid: false, error: "Value must be an array" };
       }
       break;
 
-    case 'object':
-      if (typeof value !== 'object' || value === null || Array.isArray(value)) {
-        return { valid: false, error: 'Value must be an object' };
+    case "object":
+      if (typeof value !== "object" || value === null || Array.isArray(value)) {
+        return { valid: false, error: "Value must be an object" };
       }
       break;
 
@@ -212,7 +114,7 @@ export function validateAttributeValue(
  * Validates a complete attribute value object
  */
 export function validateAttributeValueStructure(
-  attr: Partial<AttributeValue>
+  attr: Partial<AttributeValue>,
 ): {
   valid: boolean;
   errors: string[];
@@ -220,37 +122,42 @@ export function validateAttributeValueStructure(
   const errors: string[] = [];
 
   if (!attr.resourceType) {
-    errors.push('resourceType is required');
+    errors.push("resourceType is required");
   }
 
   if (!attr.resourceId) {
-    errors.push('resourceId is required');
+    errors.push("resourceId is required");
   } else if (!validateResourceId(attr.resourceId)) {
-    errors.push('resourceId format is invalid');
+    errors.push("resourceId format is invalid");
   }
 
   if (!attr.attributeKey) {
-    errors.push('attributeKey is required');
+    errors.push("attributeKey is required");
   } else if (!validateAttributeKey(attr.attributeKey)) {
-    errors.push('attributeKey format is invalid (must be camelCase or snake_case)');
+    errors.push(
+      "attributeKey format is invalid (must be camelCase or snake_case)",
+    );
   }
 
   if (attr.attributeValue === undefined) {
-    errors.push('attributeValue is required');
+    errors.push("attributeValue is required");
   }
 
   if (!attr.valueType) {
-    errors.push('valueType is required');
+    errors.push("valueType is required");
   } else if (attr.attributeValue !== undefined) {
-    const typeValidation = validateAttributeValue(attr.attributeValue, attr.valueType);
+    const typeValidation = validateAttributeValue(
+      attr.attributeValue,
+      attr.valueType,
+    );
     if (!typeValidation.valid) {
-      errors.push(typeValidation.error || 'Value type mismatch');
+      errors.push(typeValidation.error || "Value type mismatch");
     }
   }
 
   return {
     valid: errors.length === 0,
-    errors
+    errors,
   };
 }
 
@@ -258,8 +165,8 @@ export function validateAttributeValueStructure(
  * Validates a tag format
  */
 export function validateTag(tag: string): boolean {
-  // Tags should be lowercase alphanumeric with hyphens, 2-50 chars
-  const regex = /^[a-z0-9][a-z0-9-]{1,49}$/;
+  // Tags should be alphanumeric with hyphens/underscores, 3-50 chars
+  const regex = /^[a-zA-Z0-9_-]{3,50}$/;
   return regex.test(tag);
 }
 
@@ -270,10 +177,10 @@ export function validateTags(tags: string[]): {
   valid: boolean;
   invalidTags: string[];
 } {
-  const invalidTags = tags.filter(tag => !validateTag(tag));
+  const invalidTags = tags.filter((tag) => !validateTag(tag));
   return {
     valid: invalidTags.length === 0,
-    invalidTags
+    invalidTags,
   };
 }
 
@@ -287,50 +194,10 @@ export function validateCategory(category: string): boolean {
 }
 
 /**
- * Checks if a policy input is valid for creation
- */
-export function validatePolicyInput(input: PolicyInput): {
-  valid: boolean;
-  errors: string[];
-} {
-  const structureValidation = validatePolicyStructure(input);
-  if (!structureValidation.valid) {
-    return structureValidation;
-  }
-
-  const conditionValidation = validateConditionStructure(input.conditions);
-  if (!conditionValidation.valid) {
-    return {
-      valid: false,
-      errors: ['Invalid conditions', ...conditionValidation.errors]
-    };
-  }
-
-  const errors: string[] = [];
-
-  if (!validateCategory(input.category)) {
-    errors.push('category must be lowercase alphanumeric with hyphens, 2-50 characters');
-  }
-
-  const tagValidation = validateTags(input.tags);
-  if (!tagValidation.valid) {
-    errors.push(`Invalid tags: ${tagValidation.invalidTags.join(', ')}`);
-  }
-
-  return {
-    valid: errors.length === 0,
-    errors
-  };
-}
-
-/**
  * Sanitizes a string for safe use (removes potential XSS vectors)
  */
 export function sanitizeString(input: string): string {
-  return input
-    .replace(/[<>]/g, '')
-    .trim()
-    .substring(0, 1000); // Limit length
+  return input.replace(/[<>]/g, "").trim().substring(0, 1000); // Limit length
 }
 
 /**
@@ -365,7 +232,7 @@ export function isInRange(value: number, min: number, max: number): boolean {
  */
 export function validatePagination(
   limit?: number,
-  offset?: number
+  offset?: number,
 ): {
   valid: boolean;
   errors: string[];
@@ -374,18 +241,18 @@ export function validatePagination(
 
   if (limit !== undefined) {
     if (!Number.isInteger(limit) || limit < 1 || limit > 1000) {
-      errors.push('limit must be an integer between 1 and 1000');
+      errors.push("limit must be an integer between 1 and 1000");
     }
   }
 
   if (offset !== undefined) {
     if (!Number.isInteger(offset) || offset < 0) {
-      errors.push('offset must be a non-negative integer');
+      errors.push("offset must be a non-negative integer");
     }
   }
 
   return {
     valid: errors.length === 0,
-    errors
+    errors,
   };
 }
